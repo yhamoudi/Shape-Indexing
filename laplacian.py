@@ -11,10 +11,10 @@ from numpy import linalg
 
 # With A the following n*n matrix:
 
-# [[-4.  1.  1.  0.]
-#  [ 1. -4.  1.  1.]
-#  [ 1.  1. -4.  1.]
-#  [ 0.  1.  1. -4.]]
+# [[-4.  1.  0.  0.]
+#  [ 1. -4.  1.  0.]
+#  [ 0.  1. -4.  1.]
+#  [ 0.  0.  1. -4.]]
 
 
 def generate_laplacian_matrix(n):
@@ -35,20 +35,24 @@ def compute_eigenvalues(img):
     M = generate_laplacian_matrix(n)
     laplacian = M * img
     w, vectors = linalg.eig(laplacian)
+    w = w[w<-0.001]
     return sorted(-w)
 
 
+def eigenvalues_square(n):
+    # Creation of a square img:
+    img = numpy.ones((n, n), dtype=numpy.float)
+    img[:, 0] = numpy.zeros(n)
+    img[:, n-1] = numpy.zeros(n)
+    img[0, :] = numpy.zeros(n)
+    img[n-1, :] = numpy.zeros(n)
+
+    return compute_eigenvalues(img)
 
 
-n = 10
+print(eigenvalues_square(5))
+print(eigenvalues_square(10))
+print(eigenvalues_square(20))
+print(eigenvalues_square(40))
 
-# Creation of a square img:
-img = numpy.ones((n, n), dtype=numpy.float)
-img[:, 0] = numpy.zeros(n)
-img[:, n-1] = numpy.zeros(n)
-img[0, :] = numpy.zeros(n)
-img[n-1, :] = numpy.zeros(n)
-
-
-print(compute_eigenvalues(img))
 
