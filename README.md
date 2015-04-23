@@ -9,5 +9,5 @@ Dépendances :
 Charger et afficher une image : 
 
 ```
-  python3 test.py database/beetle-3.pgm
+  python3 main.py database/beetle-3.pgm
 ```
