@@ -22,8 +22,7 @@ class Image:
                            count=int(width)*int(height),
                            offset=len(header)
                            ).reshape((int(height), int(width)))
-      f = np.vectorize(lambda x: x != 0) # convert image into a boolean array (false <-> black)
-      self.image = f(image) # boolean matrix : False if black, True if white (the picture itself is white)
+      self.image = np.vectorize(lambda x: x != 0)(image) # boolean matrix : False if black, True if white (the picture itself is white)
       self.height = int(height)
       self.weight = int(width)
 
