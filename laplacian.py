@@ -50,7 +50,7 @@ def eigenvalues_square(n):
     img[:, n-1] = numpy.zeros(n)
     img[0, :] = numpy.zeros(n)
     img[n-1, :] = numpy.zeros(n)
-    
+
     return compute_eigenvalues(img)
 
 
