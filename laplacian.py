@@ -53,11 +53,11 @@ def eigenvalues_square(n):
 
     return compute_eigenvalues(img)
 
+if __name__=="__main__":
+    a = eigenvalues_square(5)
+    b = eigenvalues_square(10)
+    c = eigenvalues_square(30)
 
-a = eigenvalues_square(5)
-b = eigenvalues_square(10)
-c = eigenvalues_square(30)
-
-print(a)
-print(b)
-print(c)
+    print(a)
+    print(b)
+    print(c)

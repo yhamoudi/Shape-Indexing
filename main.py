@@ -5,6 +5,7 @@ import numpy as np
 import scipy.misc
 import sys
 from matplotlib import pyplot
+import laplacian
 import math
 
 class Image:
@@ -31,25 +32,13 @@ class Image:
 
 
     def resize(self, alpha):
-        # print(self.image.shape)
-        # n = self.image.shape[0]
-        # m = self.image.shape[1]
-        # new_n = int(math.ceil(n/float(h_a)))
-        # new_m = int(math.ceil(m/float(w_a)))
-        #
-        # new_image0 = np.concatenate((self.image, np.zeros((new_n*h_a-n, m))), axis=0)
-        # new_im = new_image0.reshape((h_a, new_n*m), order='A').mean(axis=0).reshape((new_n, m))
-        #
-        # print(new_im.shape)
-        #
-        # pyplot.imshow(new_im, pyplot.cm.gray)
-        # pyplot.show()
-
         self.image = scipy.misc.imresize(self.image, alpha)
         f = np.vectorize(lambda x: x > 0.5)
         self.image = f(self.image)
         self.height = self.image.shape[0]
         self.weight = self.image.shape[1]
+        print(self.image.shape)
+        print(self.image)
 
 
 
@@ -61,5 +50,6 @@ class Image:
 if __name__ == "__main__":
     im = Image(sys.argv[1])
     #im.print()
-    im.resize(0.7)
-    im.print()
+    im.resize(0.20)
+    #im.print()
+    print(laplacian.compute_eigenvalues(im.image))
