@@ -52,4 +52,6 @@ if __name__ == "__main__":
     #im.print()
     im.resize(0.20)
     #im.print()
-    print(laplacian.compute_eigenvalues(im.image))
+    eigenvalues = laplacian.compute_eigenvalues(im.image)
+    print(eigenvalues)
+    print(laplacian.compute_descriptor(eigenvalues))
