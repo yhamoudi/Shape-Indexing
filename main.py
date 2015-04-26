@@ -28,7 +28,6 @@ class Image:
       self.height = int(height)
       self.weight = int(width)
 
-
     def resize(self, alpha):
         # print(self.image.shape)
         # n = self.image.shape[0]
@@ -50,15 +49,11 @@ class Image:
         self.height = self.image.shape[0]
         self.weight = self.image.shape[1]
 
-
-
     def print(self):
       pyplot.imshow(self.image, pyplot.cm.gray)
       pyplot.show()
 
-
 if __name__ == "__main__":
     im = Image(sys.argv[1])
-    #im.print()
-    im.resize(0.7)
+    im.resize(0.2)
     im.print()
