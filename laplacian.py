@@ -43,6 +43,14 @@ def compute_eigenvalues(img):
     return sorted(-w)
 
 
+def compute_descriptor(eigenvalues):
+    descriptor = [eigenvalues[0]/eigenvalues[1]]
+    descriptor.append(eigenvalues[0]/eigenvalues[2])
+    descriptor.append(eigenvalues[0]/eigenvalues[3])
+    descriptor.append(eigenvalues[1]/eigenvalues[2])
+    descriptor.append(eigenvalues[2]/eigenvalues[3])
+    return descriptor
+
 def eigenvalues_square(n):
     # Creation of a square img:
     img = numpy.ones((n, n), dtype=numpy.float)
@@ -53,11 +61,11 @@ def eigenvalues_square(n):
 
     return compute_eigenvalues(img)
 
+if __name__=="__main__":
+    a = eigenvalues_square(5)
+    b = eigenvalues_square(10)
+    c = eigenvalues_square(30)
 
-a = eigenvalues_square(5)
-b = eigenvalues_square(10)
-c = eigenvalues_square(30)
-
-print(a)
-print(b)
-print(c)
+    print(a)
+    print(b)
+    print(c)

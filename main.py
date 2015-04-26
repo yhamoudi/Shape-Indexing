@@ -5,6 +5,7 @@ import numpy as np
 import scipy.misc
 import sys
 from matplotlib import pyplot
+import laplacian
 import math
 
 class Image:
@@ -48,6 +49,8 @@ class Image:
         self.image = f(self.image)
         self.height = self.image.shape[0]
         self.weight = self.image.shape[1]
+        print(self.image.shape)
+        print(self.image)
 
     def print(self):
       pyplot.imshow(self.image, pyplot.cm.gray)
@@ -55,5 +58,9 @@ class Image:
 
 if __name__ == "__main__":
     im = Image(sys.argv[1])
-    im.resize(0.2)
-    im.print()
+    #im.print()
+    im.resize(0.20)
+    #im.print()
+    eigenvalues = laplacian.compute_eigenvalues(im.image)
+    print(eigenvalues)
+    print(laplacian.compute_descriptor(eigenvalues))
