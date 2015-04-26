@@ -40,7 +40,42 @@ class Image:
         print(self.image.shape)
         print(self.image)
 
+    def remove_first_line(self):
+        if self.image[0,:].sum() == 0:
+            self.image = self.image[1:, :]
+            self.height -= 1
+            return self.remove_first_line()
 
+    def remove_last_line(self):
+        if self.image[self.height-1,:].sum() == 0:
+            self.image = self.image[0:self.height-1, :]
+            self.height -= 1
+            return self.remove_last_line()
+
+    def remove_first_column(self):
+        if self.image[:,0].sum() == 0:
+            self.image = self.image[:, 1:]
+            self.weight -= 1
+            return self.remove_first_column()
+
+    def remove_last_column(self):
+        if self.image[:, self.weight-1].sum() == 0:
+            self.image = self.image[:, 0:self.weight-1]
+            self.weight -= 1
+            return self.remove_last_column()
+
+    def crop(self):
+        self.remove_last_column()
+        self.remove_first_column()
+        self.remove_first_line()
+        self.remove_last_line()
+
+    def add_black_edges(self):
+        im = np.zeros((self.height+2, self.weight+2), dtype=np.int)
+        im[1:self.height+1, 1:self.weight+1] = self.image
+        self.image = im
+        self.height += 2
+        self.weight += 2
 
     def print(self):
       pyplot.imshow(self.image, pyplot.cm.gray)
@@ -49,9 +84,11 @@ class Image:
 
 if __name__ == "__main__":
     im = Image(sys.argv[1])
-    #im.print()
+    im.crop()
     im.resize(0.20)
-    #im.print()
+    im.add_black_edges()
+    im.print()
+
     eigenvalues = laplacian.compute_eigenvalues(im.image)
     print(eigenvalues)
     print(laplacian.compute_descriptor(eigenvalues))

@@ -3,6 +3,7 @@ import numpy
 from numpy import linalg
 from scipy import linalg as LA
 
+import scipy.sparse.linalg
 
 # Generate the following matrix:
 # [[-A.  In   0.   0.  0.]
@@ -39,6 +40,7 @@ def compute_eigenvalues(img):
     #w = sparse.linalg.eigs(laplacian, k=6, which='SR', return_eigenvectors=False)
     #w = LA.eig(laplacian)
     w= numpy.linalg.eigvals(laplacian)
+    #w = scipy.sparse.linalg.eigs(laplacian, return_eigenvectors=False)
     w = w[w<-0.001]
     return sorted(-w)
 
@@ -63,8 +65,8 @@ def eigenvalues_square(n):
 
 if __name__=="__main__":
     a = eigenvalues_square(5)
-    b = eigenvalues_square(10)
-    c = eigenvalues_square(30)
+    b = eigenvalues_square(15)
+    c = eigenvalues_square(50)
 
     print(a)
     print(b)
