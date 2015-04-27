@@ -116,12 +116,12 @@ if __name__ == "__main__":
                     im.print()
 
                 eigenvalues = laplacian.compute_eigenvalues(im.image)
+                print(name + ' ' + str(laplacian.compute_descriptor(eigenvalues)))
             else:
                 eigenvalues = output[name]
-
-            print(name)
-
+                print(name)
             return name, eigenvalues
+
         except ValueError:
             print('Warning: a problem occurs with ' + path_image)
 
@@ -132,7 +132,6 @@ if __name__ == "__main__":
         name = path_image.split('/')[-1].split('.')[0]
         results[name] = pool.apply_async(compute_eigenvalues, [path_image])
 
-    output = {}
     for name in results.keys():
         output[name] = results[name].get()
 
