@@ -18,7 +18,6 @@ import scipy.sparse.linalg
 #  [ 0.  1. -4.  1.]
 #  [ 0.  0.  1. -4.]]
 
-
 def generate_laplacian_matrix(n, h):
     N = n*n
     a = np.diagflat(-4*np.ones(N), k=0)
@@ -27,7 +26,6 @@ def generate_laplacian_matrix(n, h):
     d = np.diagflat(np.ones(N-n), k=-n)
     e = np.diagflat(np.ones(N-n), k=n)
     return (a+b+c+d+e)/(h*h)
-
 
 # Given a n*n image, compute the corresponding vector
 # Then compute the eigenvalues of the image v

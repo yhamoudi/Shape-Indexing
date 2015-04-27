@@ -84,6 +84,6 @@ if __name__ == "__main__":
     im.add_black_edges()
     #im.print()
 
-    eigenvalues = laplacian.compute_eigenvalues(im.image)
-    print(eigenvalues)
+    #eigenvalues = laplacian.compute_eigenvalues(im.image)
+    #print(eigenvalues)
     #print(laplacian.compute_descriptor(eigenvalues))
