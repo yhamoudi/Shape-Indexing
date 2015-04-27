@@ -4,100 +4,18 @@ import sys
 import re # regular expressions
 import argparse
 import pickle
+from multiprocessing import Pool
+import os.path
 
 import numpy as np
 import scipy.misc
-from matplotlib import pyplot
 
 import laplacian
-from multiprocessing import Pool
-
-import os.path
-
-
-class Image:
-    def __init__(self, filename):
-        with open(filename, 'rb') as f: #  From http://stackoverflow.com/questions/7368739/numpy-and-16-bit-pgm
-            buffer = f.read()
-        try:
-            header, width, height, maxval = re.search(
-                b"(^P5\s(?:\s*#.*[\r\n])*"
-                b"(\d+)\s(?:\s*#.*[\r\n])*"
-                b"(\d+)\s(?:\s*#.*[\r\n])*"
-                b"(\d+)\s(?:\s*#.*[\r\n]\s)*)", buffer).groups()
-        except AttributeError:
-            raise ValueError("Not a raw PGM file: '%s'" % filename)
-        image = np.frombuffer(buffer,
-                              dtype='u1',
-                              count=int(width)*int(height),
-                              offset=len(header)
-        ).reshape((int(height), int(width)))
-        # boolean matrix : False if black, True if white
-        # (the picture itself is white) :
-        self.image = np.vectorize(lambda x: x != 0)(image)
-
-    def height(self):
-        return self.image.shape[0]
-
-    def width(self):
-        return self.image.shape[1]
-
-    def make_uniform(self):
-        self.reverse_colors()
-        self.crop()
-        self.resize()
-        self.add_black_edges()
-
-    def reverse_colors(self):
-        if self.image[0,:].sum() + self.image[self.height()-1,:].sum() + self.image[:,0].sum() + self.image[:, self.width()-1].sum() > self.height() + self.width():
-          self.image = np.vectorize(lambda x: x == 0)(self.image)
-
-    def resize(self, max_edge_size=50):
-        alpha = float(max_edge_size) / float(max(self.height(), self.width()))
-        self.image = scipy.misc.imresize(self.image, alpha)
-        f = np.vectorize(lambda x: x > 0.5)
-        self.image = f(self.image)
-
-    def __remove_first_line(self):
-        if self.image[0,:].sum() == 0:
-            self.image = self.image[1:, :]
-            return self.__remove_first_line()
-
-    def __remove_last_line(self):
-        if self.image[self.height()-1,:].sum() == 0:
-            self.image = self.image[0:self.height()-1, :]
-            return self.__remove_last_line()
-
-    def __remove_first_column(self):
-        if self.image[:,0].sum() == 0:
-            self.image = self.image[:, 1:]
-            return self.__remove_first_column()
-
-    def __remove_last_column(self):
-        if self.image[:, self.width()-1].sum() == 0:
-            self.image = self.image[:, 0:self.width()-1]
-            return self.__remove_last_column()
-
-    def crop(self): # crop the image until all borders contain a white pixel
-        self.__remove_last_column()
-        self.__remove_first_column()
-        self.__remove_first_line()
-        self.__remove_last_line()
-
-    def add_black_edges(self):  # add a black border all around the image
-        im = np.zeros((self.height()+2, self.width()+2), dtype=np.int)
-        im[1:self.height()+1, 1:self.width()+1] = self.image
-        self.image = im
-
-    def print(self):
-        pyplot.imshow(self.image, pyplot.cm.gray)
-        pyplot.show()
-
-
+from image import Image
 
 if __name__ == "__main__":
     #im = Image(sys.argv[1])
-    #im.make_uniform()
+    #im.normalizem()
     #im.print()
 
     parser = argparse.ArgumentParser(description='Compute eigenvalues of an image')
@@ -121,7 +39,7 @@ if __name__ == "__main__":
             name = path_image.split('/')[-1].split('.')[0]
             if not name in output:
                 im = Image(path_image)
-                im.make_uniform()
+                im.normalize()
                 if args.show:
                     im.print()
 
