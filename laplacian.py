@@ -1,9 +1,5 @@
 __author__ = 'quentin'
 import numpy
-from numpy import linalg
-from scipy import linalg as LA
-
-import scipy.sparse.linalg
 
 # Generate the following matrix:
 # [[-A.  In   0.   0.  0.]
@@ -20,27 +16,25 @@ import scipy.sparse.linalg
 #  [ 0.  0.  1. -4.]]
 
 
-def generate_laplacian_matrix(n, h):
-    N = n*n
+def generate_laplacian_matrix(height, weight):
+    N = height*weight
     a = numpy.diagflat(-4*numpy.ones(N), k=0)
     b = numpy.diagflat(numpy.ones(N-1), k=1)
     c = numpy.diagflat(numpy.ones(N-1), k=-1)
-    d = numpy.diagflat(numpy.ones(N-n), k=-n)
-    e = numpy.diagflat(numpy.ones(N-n), k=n)
-    return (a+b+c+d+e)/(h*h)
+    d = numpy.diagflat(numpy.ones(N-weight), k=-weight)
+    e = numpy.diagflat(numpy.ones(N-weight), k=weight)
+    return (a+b+c+d+e)*(height*weight)
 
 
 # Given a n*n image, compute the corresponding vector
 # Then compute the eigenvalues of the image v
 def compute_eigenvalues(img):
-    n = img.shape[0]
-    img.resize(n*n,1)
-    M = generate_laplacian_matrix(n, 3.14159/float(n-1))
+    height = img.shape[0]
+    weight = img.shape[1]
+    img.resize(height*weight,1)
+    M = generate_laplacian_matrix(height, weight)
     laplacian = M * img
-    #w = sparse.linalg.eigs(laplacian, k=6, which='SR', return_eigenvectors=False)
-    #w = LA.eig(laplacian)
-    w= numpy.linalg.eigvals(laplacian)
-    #w = scipy.sparse.linalg.eigs(laplacian, return_eigenvectors=False)
+    w= numpy.linalg.eigvals(laplacian).real
     w = w[w<-0.001]
     return sorted(-w)
 
