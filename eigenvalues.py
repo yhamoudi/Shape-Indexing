@@ -11,6 +11,7 @@ from matplotlib import pyplot
 import laplacian
 from multiprocessing import Pool
 
+import os.path
 
 
 class Image:
@@ -101,16 +102,25 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
+    output = {}
+    if os.path.isfile(args.output):
+        output = pickle.load(open(args.output, "rb" ))
+
     def compute_eigenvalues(path_image):
         try:
             name = path_image.split('/')[-1].split('.')[0]
-            im = Image(path_image)
-            im.make_uniform()
-            if args.show:
-                im.print()
+            if not name in output:
+                im = Image(path_image)
+                im.make_uniform()
+                if args.show:
+                    im.print()
 
-            eigenvalues = laplacian.compute_eigenvalues(im.image)
-            print(name + ': ' + str(laplacian.compute_descriptor(eigenvalues)))
+                eigenvalues = laplacian.compute_eigenvalues(im.image)
+            else:
+                eigenvalues = output[name]
+
+            print(name)
+
             return name, eigenvalues
         except ValueError:
             print('Warning: a problem occurs with ' + path_image)
