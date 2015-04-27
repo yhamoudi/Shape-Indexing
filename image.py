@@ -6,20 +6,15 @@ from matplotlib import pyplot
 
 class Image:
     def __init__(self, filename):
-        with open(filename, 'rb') as f: #  From http://stackoverflow.com/questions/7368739/numpy-and-16-bit-pgm
-            buffer = f.read()
-        try:
-            header, width, height, maxval = re.search(
-                b"(^P5\s(?:\s*#.*[\r\n])*"
-                b"(\d+)\s(?:\s*#.*[\r\n])*"
-                b"(\d+)\s(?:\s*#.*[\r\n])*"
-                b"(\d+)\s(?:\s*#.*[\r\n]\s)*)", buffer).groups()
-        except AttributeError:
-            raise ValueError("Not a raw PGM file: '%s'" % filename)
-        image = np.frombuffer(buffer,
+        f = open(filename, 'rb')
+        line = f.readline().decode()
+        while not line[0].isdigit():
+          line = f.readline().decode()
+        [width,height] = re.findall(r'\d+', line)
+        maxval = re.findall(r'\d+', f.readline().decode())
+        image = np.frombuffer(f.read(),
                               dtype='u1',
-                              count=int(width)*int(height),
-                              offset=len(header)
+                              count=int(width)*int(height)
         ).reshape((int(height), int(width)))
         # boolean matrix : False if black, True if white
         # (the picture itself is white) :
