@@ -1,5 +1,6 @@
 import argparse
 import pickle
+import laplacian
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Build the data set')
@@ -7,4 +8,8 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     eigenvalues = pickle.load(open(args.eigenvalues, "rb"))
-    print(eigenvalues.keys())
+
+    for name in eigenvalues:
+        l = eigenvalues[name]
+
+
