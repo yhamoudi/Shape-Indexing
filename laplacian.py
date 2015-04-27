@@ -1,5 +1,4 @@
-__author__ = 'quentin'
-import numpy
+import numpy as np
 from numpy import linalg
 from scipy import linalg as LA
 
@@ -22,11 +21,11 @@ import scipy.sparse.linalg
 
 def generate_laplacian_matrix(n, h):
     N = n*n
-    a = numpy.diagflat(-4*numpy.ones(N), k=0)
-    b = numpy.diagflat(numpy.ones(N-1), k=1)
-    c = numpy.diagflat(numpy.ones(N-1), k=-1)
-    d = numpy.diagflat(numpy.ones(N-n), k=-n)
-    e = numpy.diagflat(numpy.ones(N-n), k=n)
+    a = np.diagflat(-4*np.ones(N), k=0)
+    b = np.diagflat(np.ones(N-1), k=1)
+    c = np.diagflat(np.ones(N-1), k=-1)
+    d = np.diagflat(np.ones(N-n), k=-n)
+    e = np.diagflat(np.ones(N-n), k=n)
     return (a+b+c+d+e)/(h*h)
 
 
@@ -39,7 +38,7 @@ def compute_eigenvalues(img):
     laplacian = M * img
     #w = sparse.linalg.eigs(laplacian, k=6, which='SR', return_eigenvectors=False)
     #w = LA.eig(laplacian)
-    w= numpy.linalg.eigvals(laplacian)
+    w= np.linalg.eigvals(laplacian)
     #w = scipy.sparse.linalg.eigs(laplacian, return_eigenvectors=False)
     w = w[w<-0.001]
     return sorted(-w)
@@ -55,11 +54,11 @@ def compute_descriptor(eigenvalues):
 
 def eigenvalues_square(n):
     # Creation of a square img:
-    img = numpy.ones((n, n), dtype=numpy.float)
-    img[:, 0] = numpy.zeros(n)
-    img[:, n-1] = numpy.zeros(n)
-    img[0, :] = numpy.zeros(n)
-    img[n-1, :] = numpy.zeros(n)
+    img = np.ones((n, n), dtype=np.float)
+    img[:, 0] = np.zeros(n)
+    img[:, n-1] = np.zeros(n)
+    img[0, :] = np.zeros(n)
+    img[n-1, :] = np.zeros(n)
 
     return compute_eigenvalues(img)
 
