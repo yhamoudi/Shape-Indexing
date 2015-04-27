@@ -49,8 +49,9 @@ class Image:
         self.add_black_edges()
 
     def reverse_colors(self):
-        if self.image[0,:].sum() + self.image[self.height()-1,:].sum() + self.image[:,0].sum() + self.image[:, self.width()-1].sum() > self.height() + self.width():
-          self.image = np.vectorize(lambda x: x == 0)(self.image)
+        if self.image[0,:].sum() + self.image[self.height()-1,:].sum() + self.image[:,0].sum() + \
+                self.image[:, self.width()-1].sum() > self.height() + self.width():
+            self.image = np.vectorize(lambda x: x == 0)(self.image)
 
     def resize(self, max_edge_size=50):
         alpha = float(max_edge_size) / float(max(self.height(), self.width()))
@@ -130,7 +131,7 @@ if __name__ == "__main__":
             else:
                 eigenvalues = output[name]
                 print(name)
-            return name, eigenvalues
+            return eigenvalues
 
         except ValueError:
             print('Warning: a problem occurs with ' + path_image)
