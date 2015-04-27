@@ -71,13 +71,13 @@ class Image:
             self.image = self.image[:, 0:self.weight()-1]
             return self.__remove_last_column()
 
-    def crop(self):
+    def crop(self): # crop the image until all borders contain a white pixel
         self.__remove_last_column()
         self.__remove_first_column()
         self.__remove_first_line()
         self.__remove_last_line()
 
-    def add_black_edges(self):
+    def add_black_edges(self):  # add a black border all around the image
         im = np.zeros((self.height()+2, self.weight()+2), dtype=np.int)
         im[1:self.height()+1, 1:self.weight()+1] = self.image
         self.image = im

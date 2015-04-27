@@ -5,6 +5,7 @@ Dépendances :
   - python3
   - numpy
   - matplotlib
+  - scipy (+ Pillow)
 
 Charger et afficher une image : 
 

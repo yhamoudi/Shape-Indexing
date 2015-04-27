@@ -1,5 +1,4 @@
-__author__ = 'quentin'
-import numpy
+import numpy as np
 
 # Generate the following matrix:
 # [[-A.  In   0.   0.  0.]
@@ -18,11 +17,11 @@ import numpy
 
 def generate_laplacian_matrix(height, weight):
     N = height*weight
-    a = numpy.diagflat(-4*numpy.ones(N), k=0)
-    b = numpy.diagflat(numpy.ones(N-1), k=1)
-    c = numpy.diagflat(numpy.ones(N-1), k=-1)
-    d = numpy.diagflat(numpy.ones(N-weight), k=-weight)
-    e = numpy.diagflat(numpy.ones(N-weight), k=weight)
+    a = np.diagflat(-4*np.ones(N), k=0)
+    b = np.diagflat(np.ones(N-1), k=1)
+    c = np.diagflat(np.ones(N-1), k=-1)
+    d = np.diagflat(np.ones(N-weight), k=-weight)
+    e = np.diagflat(np.ones(N-weight), k=weight)
     return (a+b+c+d+e)*(height*weight)
 
 
@@ -34,7 +33,7 @@ def compute_eigenvalues(img):
     img.resize(height*weight,1)
     M = generate_laplacian_matrix(height, weight)
     laplacian = M * img
-    w= numpy.linalg.eigvals(laplacian).real
+    w= np.linalg.eigvals(laplacian).real
     w = w[w<-0.001]
     return sorted(-w)
 
@@ -49,11 +48,11 @@ def compute_descriptor(eigenvalues):
 
 def eigenvalues_square(n):
     # Creation of a square img:
-    img = numpy.ones((n, n), dtype=numpy.float)
-    img[:, 0] = numpy.zeros(n)
-    img[:, n-1] = numpy.zeros(n)
-    img[0, :] = numpy.zeros(n)
-    img[n-1, :] = numpy.zeros(n)
+    img = np.ones((n, n), dtype=np.float)
+    img[:, 0] = np.zeros(n)
+    img[:, n-1] = np.zeros(n)
+    img[0, :] = np.zeros(n)
+    img[n-1, :] = np.zeros(n)
 
     return compute_eigenvalues(img)
 
