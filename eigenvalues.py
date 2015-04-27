@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+import sys
 import re # regular expressions
 import argparse
 import pickle
@@ -38,16 +39,21 @@ class Image:
     def height(self):
         return self.image.shape[0]
 
-    def weight(self):
+    def width(self):
         return self.image.shape[1]
 
     def make_uniform(self):
+        self.reverse_colors()
         self.crop()
         self.resize()
         self.add_black_edges()
 
+    def reverse_colors(self):
+        if self.image[0,:].sum() + self.image[self.height()-1,:].sum() + self.image[:,0].sum() + self.image[:, self.width()-1].sum() > self.height() + self.width():
+          self.image = np.vectorize(lambda x: x == 0)(self.image)
+
     def resize(self, max_edge_size=50):
-        alpha = float(max_edge_size) / float(max(self.height(), self.weight()))
+        alpha = float(max_edge_size) / float(max(self.height(), self.width()))
         self.image = scipy.misc.imresize(self.image, alpha)
         f = np.vectorize(lambda x: x > 0.5)
         self.image = f(self.image)
@@ -68,8 +74,8 @@ class Image:
             return self.__remove_first_column()
 
     def __remove_last_column(self):
-        if self.image[:, self.weight()-1].sum() == 0:
-            self.image = self.image[:, 0:self.weight()-1]
+        if self.image[:, self.width()-1].sum() == 0:
+            self.image = self.image[:, 0:self.width()-1]
             return self.__remove_last_column()
 
     def crop(self): # crop the image until all borders contain a white pixel
@@ -79,8 +85,8 @@ class Image:
         self.__remove_last_line()
 
     def add_black_edges(self):  # add a black border all around the image
-        im = np.zeros((self.height()+2, self.weight()+2), dtype=np.int)
-        im[1:self.height()+1, 1:self.weight()+1] = self.image
+        im = np.zeros((self.height()+2, self.width()+2), dtype=np.int)
+        im[1:self.height()+1, 1:self.width()+1] = self.image
         self.image = im
 
     def print(self):
@@ -90,6 +96,10 @@ class Image:
 
 
 if __name__ == "__main__":
+    #im = Image(sys.argv[1])
+    #im.make_uniform()
+    #im.print()
+
     parser = argparse.ArgumentParser(description='Compute eigenvalues of an image')
 
     parser.add_argument('files', metavar='F', nargs='+', help='the pgm image you want to compute the eigenvalues')

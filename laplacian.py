@@ -15,22 +15,22 @@ import numpy as np
 #  [ 0.  0.  1. -4.]]
 
 
-def generate_laplacian_matrix(height, weight):
-    N = height*weight
+def generate_laplacian_matrix(height, width):
+    N = height*width
     a = np.diagflat(-4*np.ones(N), k=0)
     b = np.diagflat(np.ones(N-1), k=1)
     c = np.diagflat(np.ones(N-1), k=-1)
-    d = np.diagflat(np.ones(N-weight), k=-weight)
-    e = np.diagflat(np.ones(N-weight), k=weight)
-    return (a+b+c+d+e)*(height*weight)
+    d = np.diagflat(np.ones(N-width), k=-width)
+    e = np.diagflat(np.ones(N-width), k=width)
+    return (a+b+c+d+e)*(height*width)
 
 # Given a n*n image, compute the corresponding vector
 # Then compute the eigenvalues of the image v
 def compute_eigenvalues(img):
     height = img.shape[0]
-    weight = img.shape[1]
-    img.resize(height*weight,1)
-    M = generate_laplacian_matrix(height, weight)
+    width = img.shape[1]
+    img.resize(height*width,1)
+    M = generate_laplacian_matrix(height, width)
     laplacian = M * img
     w= np.linalg.eigvals(laplacian).real
     w = w[w<-0.001]
