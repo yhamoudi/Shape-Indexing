@@ -1,14 +1,11 @@
 #!/usr/bin/env python3
 
 import sys
-import re # regular expressions
 import argparse
 import pickle
 from multiprocessing import Pool
 import os.path
-import numpy as np
 import scipy.misc
-
 import laplacian
 from image import Image
 
@@ -17,7 +14,7 @@ if __name__ == "__main__":
     parser.add_argument('dir', help='the directory of the pgm images you want to compute the eigenvalues')
     parser.add_argument('--output', help='output file', required=True)
     parser.add_argument('--ncpus', help='number of cpus', type=int)
-    parser.set_defaults(ncpus=1,)
+    parser.set_defaults(ncpus=1)
     args = parser.parse_args()
 
     output = {}
