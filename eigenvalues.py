@@ -25,10 +25,10 @@ if __name__ == "__main__":
         if not name in output:
             im = Image(args.dir+'/'+name)
             im.normalize()
-            output[name] = laplacian.compute_eigenvalues(im.image)
-            print(name + ' has been processed')
+            print(name + ' is processed')
+            return (name, laplacian.compute_eigenvalues(im.image))
 
     pool = Pool(args.ncpus)
-    pool.map(parallel_compute_eigenvalues,os.listdir(args.dir))
+    output.update(dict(pool.map(parallel_compute_eigenvalues,os.listdir(args.dir))))
 
     pickle.dump(output, open(args.output, "wb"))
