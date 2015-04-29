@@ -24,6 +24,7 @@ class DataSet:
         if not(category_name in self.__classes):
             self.__classes[category_name] = len(self.__classes) + 1
         id_category = self.__classes[category_name]
+
         entry = np.array(descriptor + [float(id_category)], dtype=float)
         if random.random() < self.__ratio_train:
             self.__train_set.append([entry])
@@ -90,7 +91,7 @@ class EuclideanClassifier:
 
     def classify(self, normalized_descriptor):
         def f(v):
-            return scipy.spatial.distance.euclidean(v, normalized_descriptor)
+            return scipy.spatial.distance.cosine(v, normalized_descriptor)
 
         result = np.fromiter(map(f, self.__input_matrix),
                              dtype=self.__input_matrix.dtype, count=self.__input_matrix.shape[0])
