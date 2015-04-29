@@ -4,6 +4,9 @@ import laplacian
 import numpy as np
 import random
 
+from sklearn.lda import LDA
+from sklearn.externals import joblib
+
 
 class DataSet:
     __test_set = []
@@ -31,6 +34,45 @@ class DataSet:
         return np.concatenate(self.__test_set)
 
 
+class LinearDiscriminantAnalysis(object):
+    def __init__(self, input_matrix, labels):
+        self.x = input_matrix
+        self.y = labels
+        self.clf = LDA()
+
+    def train(self):
+        self.clf.fit(self.x, self.y)
+
+    def predict(self, x):
+        return self.clf.predict(x)
+
+    def save_model(self, file):
+        joblib.dump(self.clf, file)
+
+
+class Classifier:
+    def __init__(self, train_set):
+        descriptor_size = train_set.shape[1]-1
+        input_matrix = train_set[:, 0:descriptor_size-1]
+        labels = train_set[:, descriptor_size].astype(int)
+        self.__classifier = LinearDiscriminantAnalysis(input_matrix=input_matrix,
+                                                       labels=labels)
+
+    def train(self):
+        self.__classifier.train()
+
+    def evaluation(self, test_set):
+        descriptor_size = test_set.shape[1]-1
+        input_matrix = test_set[:, 0:descriptor_size-1]
+        labels = test_set[:, descriptor_size].astype(int)
+        print(labels)
+        estimated_answers = self.__classifier.predict(input_matrix)
+
+        correct_answers = np.sum(estimated_answers == labels)
+        ratio_correct_answers = float(correct_answers)/float(labels.shape[0])
+
+        return ratio_correct_answers
+
 
 
 if __name__ == "__main__":
@@ -40,12 +82,13 @@ if __name__ == "__main__":
 
     eigenvalues = pickle.load(open(args.eigenvalues, "rb"))
 
-    data_set = DataSet(0.8)
+    data_set = DataSet(0.95)
 
     for name in eigenvalues:
         ev_list = eigenvalues[name]
-        category_name = name.split('-')[0]
-        data_set.add(category_name, laplacian.compute_descriptor(ev_list))
+        category = name.split('-')[0]
+        data_set.add(category, laplacian.compute_descriptor(ev_list))
 
-    print(data_set.get_train_set().shape)
-    print(data_set.get_train_set())
+    classifier = Classifier(data_set.get_train_set())
+    classifier.train()
+    print(classifier.evaluation(data_set.get_test_set()))
