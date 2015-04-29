@@ -18,8 +18,7 @@ class Image:
                               dtype='u1',
                               count=int(width)*int(height)
         ).reshape((int(height), int(width)))
-        # boolean matrix : False if black, True if white
-        # (the picture itself is white) :
+        # boolean matrix : False if black, True if white (the picture itself is white) :
         self.image = np.vectorize(lambda x: x != 0)(image)
 
     def print(self):
@@ -49,7 +48,7 @@ class Image:
     def normalize(self):
         self.__reverse_colors()  # reverse colors if the picture itself was white
         self.__crop()            # crop the image until all borders contain a white pixel
-        self.__resize(50)        # resize the image (largest side has size 50)
+        self.resize(50)        # resize the image (largest side has size 50)
         self.__add_black_edges() # add a black border all around the image
 
     def __reverse_colors(self):

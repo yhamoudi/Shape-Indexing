@@ -9,6 +9,16 @@ import scipy.misc
 import laplacian
 from image import Image
 
+def arrange_eigenvalues(eigenvalues):
+    output = {}
+    for image in eigenvalues:
+      [category,number] = image.split('-')
+      if category in output:
+        output[category] = output[category] + [[number,eigenvalues[image]]]
+      else:
+        output[category] = [[number,eigenvalues[image]]]
+    return output
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Compute eigenvalues of an image')
     parser.add_argument('dir', help='the directory of the pgm images you want to compute the eigenvalues')
