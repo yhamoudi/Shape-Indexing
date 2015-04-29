@@ -3,21 +3,22 @@ import pickle
 import laplacian
 import numpy as np
 import random
+import scipy.spatial.distance
+from multiprocessing import Pool
+
 
 from sklearn.lda import LDA
 from sklearn.externals import joblib
 
 
 class DataSet:
-    __test_set = []
-    __train_set = []
-
-    __classes = {}
-    __mean = None
-    __std = None
-
     def __init__(self, ratio_train):
         self.__ratio_train = ratio_train
+        self.__test_set = []
+        self.__train_set = []
+        self.__classes = {}
+        self.__mean = None
+        self.__std = None
 
     def add(self, category_name, descriptor):
         if not(category_name in self.__classes):
@@ -58,7 +59,7 @@ class LinearDiscriminantAnalysis(object):
         joblib.dump(self.clf, file)
 
 
-class Classifier:
+class LinearClassifier:
     def __init__(self, train_set):
         descriptor_size = train_set.shape[1]-1
         input_matrix = train_set[:, 0:descriptor_size-1]
@@ -81,6 +82,31 @@ class Classifier:
         return ratio_correct_answers
 
 
+class EuclideanClassifier:
+    def __init__(self, train_set):
+        descriptor_size = train_set.shape[1]-1
+        self.__input_matrix = train_set[:, 0:descriptor_size]
+        self.__labels = train_set[:, descriptor_size].astype(int)
+
+    def classify(self, normalized_descriptor):
+        def f(v):
+            return scipy.spatial.distance.euclidean(v, normalized_descriptor)
+
+        result = np.fromiter(map(f, self.__input_matrix),
+                             dtype=self.__input_matrix.dtype, count=self.__input_matrix.shape[0])
+
+        return self.__labels[np.argmin(result)]
+
+    def evaluation(self, test_set):
+        descriptor_size = test_set.shape[1]-1
+        input_matrix = test_set[:, 0:descriptor_size]
+        labels = test_set[:, descriptor_size].astype(int)
+
+        estimated_answers = np.fromiter(map(self.classify, input_matrix), dtype=int, count=input_matrix.shape[0])
+
+        correct_answers = np.sum(estimated_answers == labels)
+        return float(correct_answers)/float(labels.shape[0])
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Build the data set')
@@ -89,22 +115,41 @@ if __name__ == "__main__":
 
     eigenvalues = pickle.load(open(args.eigenvalues, "rb"))
 
-    data_set = DataSet(0.80)
 
-    m_test = []
-    m_train = []
-    for i in range(0, 100):
+
+    # m_test = []
+    # m_train = []
+    # for i in range(0, 100):
+    #     for name in eigenvalues:
+    #         ev_list = eigenvalues[name]
+    #         category = name.split('-')[0]
+    #         data_set.add(category, laplacian.compute_descriptor(ev_list))
+    #
+    #     train_set = data_set.get_train_set()
+    #     classifier = LinearClassifier(train_set)
+    #     classifier.train()
+    #     r = data_set.get_test_set()
+    #     m_test.append(classifier.evaluation(data_set.get_test_set()))
+    #     m_train.append(classifier.evaluation(train_set))
+    #
+    # print(np.array(m_test, dtype=float).mean())
+    # print(np.array(m_train, dtype=float).mean())
+
+    def f(i):
+        data_set = DataSet(0.80)
         for name in eigenvalues:
             ev_list = eigenvalues[name]
             category = name.split('-')[0]
             data_set.add(category, laplacian.compute_descriptor(ev_list))
 
         train_set = data_set.get_train_set()
-        classifier = Classifier(train_set)
-        classifier.train()
-        r = data_set.get_test_set()
-        m_test.append(classifier.evaluation(data_set.get_test_set()))
-        m_train.append(classifier.evaluation(train_set))
+        test_set = data_set.get_test_set()
+        classifier = EuclideanClassifier(train_set)
+        return classifier.evaluation(test_set)
 
+    pool = Pool(2)
+    m_test = pool.map(f, [0]*10)
+
+    print(m_test)
     print(np.array(m_test, dtype=float).mean())
-    print(np.array(m_train, dtype=float).mean())
+    print(np.array(m_test, dtype=float).std())
