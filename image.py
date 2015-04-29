@@ -3,6 +3,8 @@ import re # regular expressions
 import numpy as np
 from scipy import ndimage, misc
 from matplotlib import pyplot
+from scipy.misc import imrotate
+from math import sqrt, ceil
 
 class Image:
     def __init__(self, filename):
@@ -20,9 +22,9 @@ class Image:
         # (the picture itself is white) :
         self.image = np.vectorize(lambda x: x != 0)(image)
 
-    #def rotate(self,angle):
-    #  image = ndimage.rotate(self.image,angle)
-    #  self.image = np.vectorize(lambda x: x > 0)(image)
+    def print(self):
+        pyplot.imshow(self.image, pyplot.cm.gray)
+        pyplot.show()
 
     def height(self):
         return self.image.shape[0]
@@ -30,17 +32,31 @@ class Image:
     def width(self):
         return self.image.shape[1]
 
+    def noise(self):
+      poissonNoise = np.random.poisson(10,self.image.shape).astype(bool)
+      self.image = self.image + poissonNoise
+
+    def rotate(self,angle): # rotate (and resize in order not to crop the initial image)
+      exp = int(max(self.height(), self.width())/2)
+      for i in range (0,exp):
+        self.image = np.vstack((self.image,np.zeros(self.width())))
+        self.image = np.vstack((np.zeros(self.width()),self.image))
+      for i in range (0,exp):
+        self.image = np.column_stack((self.image,np.zeros(self.height())))
+        self.image = np.column_stack((np.zeros(self.height()),self.image))
+      self.image = imrotate(self.image,angle)
+
     def normalize(self):
         self.__reverse_colors()  # reverse colors if the picture itself was white
         self.__crop()            # crop the image until all borders contain a white pixel
-        self.__resize()          # resize the image
+        self.__resize(50)        # resize the image (largest side has size 50)
         self.__add_black_edges() # add a black border all around the image
 
     def __reverse_colors(self):
         if self.image[0,:].sum() + self.image[self.height()-1,:].sum() + self.image[:,0].sum() + self.image[:, self.width()-1].sum() > self.height() + self.width():
           self.image = np.vectorize(lambda x: x == 0)(self.image)
 
-    def __resize(self, max_edge_size=50):
+    def resize(self, max_edge_size):
         alpha = float(max_edge_size) / float(max(self.height(), self.width()))
         self.image = misc.imresize(self.image, alpha)
         self.image = np.vectorize(lambda x: x > 0.5)(self.image)
@@ -75,7 +91,3 @@ class Image:
         im = np.zeros((self.height()+2, self.width()+2), dtype=np.int)
         im[1:self.height()+1, 1:self.width()+1] = self.image
         self.image = im
-
-    def print(self):
-        pyplot.imshow(self.image, pyplot.cm.gray)
-        pyplot.show()
