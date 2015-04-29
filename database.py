@@ -111,29 +111,14 @@ class EuclideanClassifier:
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Build the data set')
     parser.add_argument('eigenvalues', metavar='F', help='the file where are stored the eigenvalues')
+    parser.add_argument('--niters', help='number of iterations (to reduce the std)', type=int)
+    parser.add_argument('--LDA', dest='lda', action='store_true')
+
+    parser.set_defaults(niters=10, lda=False)
+
     args = parser.parse_args()
 
     eigenvalues = pickle.load(open(args.eigenvalues, "rb"))
-
-
-
-    # m_test = []
-    # m_train = []
-    # for i in range(0, 100):
-    #     for name in eigenvalues:
-    #         ev_list = eigenvalues[name]
-    #         category = name.split('-')[0]
-    #         data_set.add(category, laplacian.compute_descriptor(ev_list))
-    #
-    #     train_set = data_set.get_train_set()
-    #     classifier = LinearClassifier(train_set)
-    #     classifier.train()
-    #     r = data_set.get_test_set()
-    #     m_test.append(classifier.evaluation(data_set.get_test_set()))
-    #     m_train.append(classifier.evaluation(train_set))
-    #
-    # print(np.array(m_test, dtype=float).mean())
-    # print(np.array(m_train, dtype=float).mean())
 
     def f(i):
         data_set = DataSet(0.80)
@@ -144,11 +129,17 @@ if __name__ == "__main__":
 
         train_set = data_set.get_train_set()
         test_set = data_set.get_test_set()
-        classifier = EuclideanClassifier(train_set)
+        if not args.lda:
+            classifier = EuclideanClassifier(train_set)
+        else:
+            classifier = LinearClassifier(train_set)
+            classifier.train()
         return classifier.evaluation(test_set)
 
+
+
     pool = Pool(2)
-    m_test = pool.map(f, [0]*10)
+    m_test = pool.map(f, [0]*args.niters)
 
     print(m_test)
     print(np.array(m_test, dtype=float).mean())
