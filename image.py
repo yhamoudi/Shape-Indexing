@@ -26,6 +26,10 @@ class Image:
     def width(self):
         return self.image.shape[1]
 
+    def noise(self):
+      self.image = self.image + 0.2 * np.random.randn(*self.image.shape)**2
+      self.image = np.vectorize(lambda x: x > 0.5)(self.image)
+
     def normalize(self):
         self.__reverse_colors()  # reverse colors if the picture itself was white
         self.__crop()            # crop the image until all borders contain a white pixel
