@@ -14,7 +14,6 @@ import numpy as np
 #  [ 0.  1. -4.  1.]
 #  [ 0.  0.  1. -4.]]
 
-
 def generate_laplacian_matrix(height, width):
     N = height*width
     a = np.diagflat(-4*np.ones(N), k=0)
