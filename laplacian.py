@@ -37,13 +37,13 @@ def compute_eigenvalues(img):
 
 
 def compute_descriptor(eigenvalues):
-    descriptor = [eigenvalues[0]/eigenvalues[1]]
-    descriptor.append(eigenvalues[0]/eigenvalues[2])
-    descriptor.append(eigenvalues[0]/eigenvalues[3])
-    #descriptor.append(eigenvalues[0]/eigenvalues[4])
-    descriptor.append(eigenvalues[1]/eigenvalues[2])
-    descriptor.append(eigenvalues[2]/eigenvalues[3])
-    #descriptor.append(eigenvalues[3]/eigenvalues[4])
+    descriptor = []
+    for i in range(1, 10):
+        descriptor.append(eigenvalues[0]/eigenvalues[i])
+
+    #for i in range(0, 5):
+    #    descriptor.append(eigenvalues[i]/eigenvalues[i+1])
+
     return descriptor
 
 def eigenvalues_square(n):

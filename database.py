@@ -13,6 +13,8 @@ class DataSet:
     __train_set = []
 
     __classes = {}
+    __mean = None
+    __std = None
 
     def __init__(self, ratio_train):
         self.__ratio_train = ratio_train
@@ -28,10 +30,16 @@ class DataSet:
             self.__test_set.append([entry])
 
     def get_train_set(self):
-        return np.concatenate(self.__train_set)
+        matrix = np.concatenate(self.__train_set)
+        self.__mean = matrix[:, 0:matrix.shape[1]-1].mean(axis=0)
+        self.__std = matrix[:, 0:matrix.shape[1]-1].std(axis=0)
+        matrix[:, 0:matrix.shape[1]-1] = (matrix[:, 0:matrix.shape[1]-1] - self.__mean) / self.__std
+        return matrix
 
     def get_test_set(self):
-        return np.concatenate(self.__test_set)
+        matrix = np.concatenate(self.__test_set)
+        matrix[:, 0:matrix.shape[1]-1] = (matrix[:, 0:matrix.shape[1]-1] - self.__mean) / self.__std
+        return matrix
 
 
 class LinearDiscriminantAnalysis(object):
@@ -65,7 +73,6 @@ class Classifier:
         descriptor_size = test_set.shape[1]-1
         input_matrix = test_set[:, 0:descriptor_size-1]
         labels = test_set[:, descriptor_size].astype(int)
-        print(labels)
         estimated_answers = self.__classifier.predict(input_matrix)
 
         correct_answers = np.sum(estimated_answers == labels)
@@ -82,13 +89,22 @@ if __name__ == "__main__":
 
     eigenvalues = pickle.load(open(args.eigenvalues, "rb"))
 
-    data_set = DataSet(0.95)
+    data_set = DataSet(0.80)
 
-    for name in eigenvalues:
-        ev_list = eigenvalues[name]
-        category = name.split('-')[0]
-        data_set.add(category, laplacian.compute_descriptor(ev_list))
+    m_test = []
+    m_train = []
+    for i in range(0, 100):
+        for name in eigenvalues:
+            ev_list = eigenvalues[name]
+            category = name.split('-')[0]
+            data_set.add(category, laplacian.compute_descriptor(ev_list))
 
-    classifier = Classifier(data_set.get_train_set())
-    classifier.train()
-    print(classifier.evaluation(data_set.get_test_set()))
+        train_set = data_set.get_train_set()
+        classifier = Classifier(train_set)
+        classifier.train()
+        r = data_set.get_test_set()
+        m_test.append(classifier.evaluation(data_set.get_test_set()))
+        m_train.append(classifier.evaluation(train_set))
+
+    print(np.array(m_test, dtype=float).mean())
+    print(np.array(m_train, dtype=float).mean())
