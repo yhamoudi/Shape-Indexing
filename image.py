@@ -33,8 +33,8 @@ class Image:
         return self.image.shape[1]
 
     def noise(self):
-      poissonNoise = np.random.poisson(10,self.image.shape).astype(bool)
-      self.image = self.image + poissonNoise
+      self.image = self.image + 0.2 * np.random.randn(*self.image.shape)**2
+      self.image = np.vectorize(lambda x: x > 0.5)(self.image)
 
     def rotate(self,angle): # rotate (and resize in order not to crop the initial image)
       exp = int(max(self.height(), self.width())/2)
