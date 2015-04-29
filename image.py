@@ -1,7 +1,7 @@
 import sys
 import re # regular expressions
 import numpy as np
-import scipy.misc
+from scipy import ndimage, misc
 from matplotlib import pyplot
 
 class Image:
@@ -19,6 +19,10 @@ class Image:
         # boolean matrix : False if black, True if white
         # (the picture itself is white) :
         self.image = np.vectorize(lambda x: x != 0)(image)
+
+    #def rotate(self,angle):
+    #  image = ndimage.rotate(self.image,angle)
+    #  self.image = np.vectorize(lambda x: x > 0)(image)
 
     def height(self):
         return self.image.shape[0]
@@ -38,7 +42,7 @@ class Image:
 
     def __resize(self, max_edge_size=50):
         alpha = float(max_edge_size) / float(max(self.height(), self.width()))
-        self.image = scipy.misc.imresize(self.image, alpha)
+        self.image = misc.imresize(self.image, alpha)
         self.image = np.vectorize(lambda x: x > 0.5)(self.image)
 
     def __remove_first_line(self):
