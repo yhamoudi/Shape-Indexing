@@ -86,7 +86,7 @@ def sound_game():
     if answer-1 == now:
         print("Success")
     else:
-        print("Fail")
+        print("Fail, it was number " + str(now+1))
         
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Play an image')
