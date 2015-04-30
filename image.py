@@ -4,7 +4,7 @@ import numpy as np
 from scipy import ndimage, misc
 from matplotlib import pyplot
 from scipy.misc import imrotate
-from math import sqrt, ceil
+import random
 
 class Image:
     def __init__(self, filename):
@@ -31,9 +31,50 @@ class Image:
     def width(self):
         return self.image.shape[1]
 
-    def noise(self):
-      self.image = self.image + 0.2 * np.random.randn(*self.image.shape)**2
-      self.image = np.vectorize(lambda x: x > 0.5)(self.image)
+    def __neighbors(self,i,j): # All neighbors (a,b) of (i,j) that are not out of range
+      x = [i]
+      if i >= 1:
+        x.append(i-1)
+      if i <= self.image.shape[0] -2:
+        x.append(i+1)
+      y = [j]
+      if j >= 1:
+        y.append(j-1)
+      if j <= self.image.shape[1] -2:
+        y.append(j+1)
+      res = []
+      for a in x:
+        for b in y:
+          if a != i or b != j:
+            res.append([a,b])
+      return res
+
+    def __distance(self): # Distances of white pixels to the border
+      dist = np.vectorize(lambda x: -1)(np.zeros(self.image.shape))
+      still = True
+      for i in range(0,dist.shape[0]):
+        for j in range(0,dist.shape[1]):
+          if not self.image[i][j]:
+            dist[i][j] = 0
+      d = 1
+      while still:
+        still = False
+        for i in range(0,dist.shape[0]):
+          for j in range(0,dist.shape[1]):
+            if dist[i][j] == -1:
+              still = True
+            elif dist[i][j] == d-1:
+              for x in self.__neighbors(i,j):
+                if dist[x[0]][x[1]] == -1:
+                  dist[x[0]][x[1]] = d
+        d = d+1
+      return dist
+
+    def noise(self,a): # Add a Kanungo noise of factor a
+      dist = self.__distance()
+      for i in range(0,dist.shape[0]):
+        for j in range(0,dist.shape[1]):
+          self.image[i][j] = random.random () < 1 - a**dist[i][j]
 
     def rotate(self,angle): # rotate (and resize in order not to crop the initial image)
       exp = int(max(self.height(), self.width())/2)
