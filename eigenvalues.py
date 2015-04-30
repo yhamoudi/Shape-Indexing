@@ -9,7 +9,7 @@ import scipy.misc
 import laplacian
 from image import Image
 
-def arrange_eigenvalues(eigenvalues):
+def arrange_eigenvalues(eigenvalues): # produce a structured database
     output = {}
     for image in eigenvalues:
       [category,number] = image.split('-')

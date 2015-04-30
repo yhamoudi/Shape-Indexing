@@ -57,7 +57,7 @@ def produce_sound(eigenvalues): # produce a sound from eigenvalues
     )
 
 def sound_game():
-    eigenvalues = pickle.load(open('eigenvalues_arranged.db', "rb"))
+    eigenvalues = pickle.load(open('eigenvalues/eigenvalues_arranged.db', "rb"))
     dif = int(input('Enter the difficulty (2-10): ')) # number of sounds to heard
     category = random.choice(list(eigenvalues.keys())) # a random category
     sample = random.randint(0,len(eigenvalues[category])-1) # an object in this category
@@ -87,7 +87,7 @@ if __name__ == "__main__":
     parser.add_argument('file', help='Name of the image')
     args = parser.parse_args()
 
-    eigenvalues_list = pickle.load(open('eigenvalues.db', "rb")) # eigenvalues already computed
+    eigenvalues_list = pickle.load(open('eigenvalues/eigenvalues.db', "rb")) # eigenvalues already computed
     name = args.file.split('/')[-1]
     if name in eigenvalues_list:
         eigenvalues = eigenvalues_list[name]
