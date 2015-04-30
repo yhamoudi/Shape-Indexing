@@ -5,7 +5,7 @@ import math
 import argparse
 from pyaudio import PyAudio
 
-import laplacian
+import eigenvalues
 from image import Image
 import numpy as np
 import os.path
@@ -94,6 +94,6 @@ if __name__ == "__main__":
     else:
         im = Image(args.file)
         im.normalize()
-        eigenvalues = laplacian.compute_eigenvalues(im.image)
+        eigenvalues = eigenvalues.compute_eigenvalues(im.image)
 
     produce_sound(eigenvalues) # produce the sound associated to the eigenvalues of the input image

@@ -1,6 +1,6 @@
 import argparse
 import pickle
-import laplacian
+import eigenvalues
 import numpy as np
 import random
 import scipy.spatial.distance
@@ -125,7 +125,7 @@ if __name__ == "___main__":
         for name in eigenvalues:
             ev_list = eigenvalues[name]
             category = name.split('-')[0]
-            data_set.add(category, laplacian.compute_descriptor(ev_list))
+            data_set.add(category, eigenvalues.compute_descriptor(ev_list))
 
         train_set = data_set.get_train_set()
         test_set = data_set.get_test_set()
