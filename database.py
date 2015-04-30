@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 import argparse
 import pickle
 import eigenvalues
@@ -5,11 +7,8 @@ import numpy as np
 import random
 import scipy.spatial.distance
 from multiprocessing import Pool
-
-
 from sklearn.lda import LDA
 from sklearn.externals import joblib
-
 
 class DataSet:
     def __init__(self, ratio_train):
@@ -135,8 +134,6 @@ if __name__ == "___main__":
             classifier = LinearClassifier(train_set)
             classifier.train()
         return classifier.evaluation(test_set)
-
-
 
     pool = Pool(2)
     m_test = pool.map(f, [0]*args.niters)
