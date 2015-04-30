@@ -11,7 +11,7 @@ class Image:
         f = open(filename, 'rb')
         line = f.readline().decode()
         while not line[0].isdigit():
-          line = f.readline().decode()
+            line = f.readline().decode()
         [width,height] = re.findall(r'\d+', line)
         maxval = re.findall(r'\d+', f.readline().decode())
         image = np.frombuffer(f.read(),
@@ -31,75 +31,77 @@ class Image:
     def width(self):
         return self.image.shape[1]
 
-    def __neighbors(self,i,j): # All neighbors (a,b) of (i,j) that are not out of range
-      x = [i]
-      if i >= 1:
-        x.append(i-1)
-      if i <= self.image.shape[0] -2:
-        x.append(i+1)
-      y = [j]
-      if j >= 1:
-        y.append(j-1)
-      if j <= self.image.shape[1] -2:
-        y.append(j+1)
-      res = []
-      for a in x:
-        for b in y:
-          if a != i or b != j:
-            res.append([a,b])
-      return res
-
-    def __distance(self): # Distances of white pixels to the border
-      dist = np.vectorize(lambda x: -1)(np.zeros(self.image.shape))
-      still = True
-      for i in range(0,dist.shape[0]):
-        for j in range(0,dist.shape[1]):
-          if not self.image[i][j]:
-            dist[i][j] = 0
-      d = 1
-      while still:
-        still = False
-        for i in range(0,dist.shape[0]):
-          for j in range(0,dist.shape[1]):
-            if dist[i][j] == -1:
-              still = True
-            elif dist[i][j] == d-1:
-              for x in self.__neighbors(i,j):
-                if dist[x[0]][x[1]] == -1:
-                  dist[x[0]][x[1]] = d
-        d = d+1
-      return dist
-
-    def noise(self,a): # Add a Kanungo noise of factor a
-      dist = self.__distance()
-      for i in range(0,dist.shape[0]):
-        for j in range(0,dist.shape[1]):
-          self.image[i][j] = random.random () < 1 - a**dist[i][j]
-
-    def rotate(self,angle): # rotate (and resize in order not to crop the initial image)
-      exp = int(max(self.height(), self.width())/2)
-      for i in range (0,exp):
-        self.image = np.vstack((self.image,np.zeros(self.width())))
-        self.image = np.vstack((np.zeros(self.width()),self.image))
-      for i in range (0,exp):
-        self.image = np.column_stack((self.image,np.zeros(self.height())))
-        self.image = np.column_stack((np.zeros(self.height()),self.image))
-      self.image = imrotate(self.image,angle)
-
-    def normalize(self):
-        self.__reverse_colors()  # reverse colors if the picture itself was white
-        self.__crop()            # crop the image until all borders contain a white pixel
-        self.resize(50)        # resize the image (largest side has size 50)
-        self.__add_black_edges() # add a black border all around the image
-
-    def __reverse_colors(self):
-        if self.image[0,:].sum() + self.image[self.height()-1,:].sum() + self.image[:,0].sum() + self.image[:, self.width()-1].sum() > self.height() + self.width():
-          self.image = np.vectorize(lambda x: x == 0)(self.image)
-
     def resize(self, max_edge_size):
         alpha = float(max_edge_size) / float(max(self.height(), self.width()))
         self.image = misc.imresize(self.image, alpha)
         self.image = np.vectorize(lambda x: x > 0.5)(self.image)
+
+    def normalize(self):
+        self.__reverse_colors()  # reverse colors if the picture itself was white
+        self.__crop()            # crop the image until all borders contain a white pixel
+        self.resize(50)          # resize the image (largest side has size 50)
+        self.__add_black_edges() # add a black border all around the image
+
+    def rotate(self,angle): # rotate (and resize in order not to crop the initial image)
+        exp = int(max(self.height(), self.width())/2)
+        for i in range (0,exp):
+            self.image = np.vstack((self.image,np.zeros(self.width())))
+            self.image = np.vstack((np.zeros(self.width()),self.image))
+        for i in range (0,exp):
+            self.image = np.column_stack((self.image,np.zeros(self.height())))
+            self.image = np.column_stack((np.zeros(self.height()),self.image))
+        self.image = imrotate(self.image,angle)
+
+    def noise(self,a): # Add a Kanungo noise of factor a
+        dist = self.__distance()
+        for i in range(0,dist.shape[0]):
+          for j in range(0,dist.shape[1]):
+            self.image[i][j] = random.random () < 1 - a**dist[i][j]
+
+    ################ Private methods ##################
+
+    def __neighbors(self,i,j): # All neighbors (a,b) of (i,j) that are not out of range
+        x = [i]
+        if i >= 1:
+            x.append(i-1)
+        if i <= self.image.shape[0] -2:
+            x.append(i+1)
+        y = [j]
+        if j >= 1:
+            y.append(j-1)
+        if j <= self.image.shape[1] -2:
+            y.append(j+1)
+        res = []
+        for a in x:
+            for b in y:
+                if a != i or b != j:
+                    res.append([a,b])
+        return res
+
+    def __distance(self): # Distances of white pixels to the border
+        dist = np.vectorize(lambda x: -1)(np.zeros(self.image.shape))
+        still = True
+        for i in range(0,dist.shape[0]):
+            for j in range(0,dist.shape[1]):
+                if not self.image[i][j]:
+                  dist[i][j] = 0
+        d = 1
+        while still:
+            still = False
+            for i in range(0,dist.shape[0]):
+                for j in range(0,dist.shape[1]):
+                    if dist[i][j] == -1:
+                        still = True
+                    elif dist[i][j] == d-1:
+                        for x in self.__neighbors(i,j):
+                            if dist[x[0]][x[1]] == -1:
+                                dist[x[0]][x[1]] = d
+            d = d+1
+        return dist
+
+    def __reverse_colors(self):
+        if self.image[0,:].sum() + self.image[self.height()-1,:].sum() + self.image[:,0].sum() + self.image[:, self.width()-1].sum() > self.height() + self.width():
+            self.image = np.vectorize(lambda x: x == 0)(self.image)
 
     def __remove_first_line(self):
         if self.image[0,:].sum() == 0:
