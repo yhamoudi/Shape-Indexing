@@ -87,14 +87,39 @@ class EuclideanClassifier:
         self.input_matrix = train_set[:, 0:descriptor_size]
         self.labels = train_set[:, descriptor_size].astype(int)
 
+    @staticmethod
+    def distance(a, b):
+        return scipy.spatial.distance.euclidean(a, b)
+
     def classify(self, normalized_descriptor):
-        def f(v):
-            return scipy.spatial.distance.cosine(v, normalized_descriptor)
+        f = lambda v: self.distance(v, normalized_descriptor)
 
         result = np.fromiter(map(f, self.input_matrix),
                              dtype=self.input_matrix.dtype, count=self.input_matrix.shape[0])
 
         return self.labels[np.argmin(result)]
+
+    def probabilistic_classification(self, normalized_descriptor):
+        f = lambda v: self.distance(v, normalized_descriptor)
+        distances = np.fromiter(map(f, self.input_matrix),
+                             dtype=self.input_matrix.dtype, count=self.input_matrix.shape[0])
+
+        list_classes = np.unique(self.labels)
+        nb_classes = list_classes.shape[0]
+        classes_dst = np.zeros(nb_classes)
+        for i in range(0, nb_classes):
+            di = np.min(distances[np.where(self.labels == i+1)])
+            if di < 0.0000001:
+                classes_dst = np.zeros(nb_classes)
+                classes_dst[i] = 1
+                return classes_dst
+            else:
+                classes_dst[i] = 1.0 / np.min(distances[np.where(self.labels == i+1)])
+
+        classes_dst = classes_dst / np.sum(classes_dst)
+
+        return classes_dst
+
 
     def evaluation(self, test_set):
         descriptor_size = test_set.shape[1]-1
