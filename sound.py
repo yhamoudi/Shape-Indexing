@@ -42,13 +42,7 @@ def sine_tone(frequencies, amplitudes, duration, volume=1.0, sample_rate=22050):
     stream.close()
     p.terminate()
 
-
-def compute_eigenvalues(img_file):
-    im = Image(img_file)
-    im.normalize()
-    return laplacian.compute_eigenvalues(im.image)
-
-def produce_sound(eigenvalues):
+def produce_sound(eigenvalues): # produce a sound from eigenvalues
     eigenvalues = np.array(eigenvalues, dtype=float)
     frequencies = np.array(40 * np.sqrt(eigenvalues[0:3]), dtype=int)
     print(frequencies)
@@ -60,7 +54,7 @@ def produce_sound(eigenvalues):
         volume=.3, # 0..1 how loud it is
         # see http://en.wikipedia.org/wiki/Bit_rate#Audio
         sample_rate=22050 # number of samples per second
-)
+    )
 
 def sound_game():
     eigenvalues = pickle.load(open('eigenvalues_arranged.db', "rb"))
@@ -70,8 +64,8 @@ def sound_game():
     print("Listen this sample of " + category)
     time.sleep(2)
     produce_sound(eigenvalues[category][sample][1])
-    print("Now listen this " + str(dif) + " sounds:")
-    now = random.randint(0,dif-1) # moment to listen an object of the same category than sample
+    print("Now listen these " + str(dif) + " sounds:")
+    now = random.randint(0,dif-1) # time to listen an object of the same category than sample
     for i in range(0,dif):
       time.sleep(2)
       print("Sound " + str(1+i))
@@ -90,32 +84,16 @@ def sound_game():
         
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Play an image')
-    parser.add_argument('file', help='the image')
-    parser.add_argument('--eigenvalues', help='the precomputed eigenvalues')
-    parser.set_defaults(eigenvalues=1)
+    parser.add_argument('file', help='Name of the image')
     args = parser.parse_args()
 
-    if os.path.isfile(args.eigenvalues):
-        print(args.file.split('/')[-1])
-        eigenvalues_list = pickle.load(open(args.eigenvalues, "rb"))
-        if args.file.split('/')[-1] in eigenvalues_list:
-            eigenvalues = eigenvalues_list[args.file.split('/')[-1]]
-        else:
-            eigenvalues = compute_eigenvalues(args.file)
+    eigenvalues_list = pickle.load(open('eigenvalues.db', "rb")) # eigenvalues already computed
+    name = args.file.split('/')[-1]
+    if name in eigenvalues_list:
+        eigenvalues = eigenvalues_list[name]
     else:
-        eigenvalues = compute_eigenvalues(args.file)
+        im = Image(args.file)
+        im.normalize()
+        eigenvalues = laplacian.compute_eigenvalues(im.image)
 
-    eigenvalues = np.array(eigenvalues, dtype=float)
-    frequencies = np.array(40 * np.sqrt(eigenvalues[0:3]), dtype=int)
-    print(frequencies)
-    sine_tone(
-        # see http://www.phy.mtu.edu/~suits/notefreqs.html
-        frequencies=frequencies.tolist(), # Hz, waves per second A4
-        amplitudes=np.ones(3).tolist(),
-        duration=2., # seconds to play sound
-        volume=.3, # 0..1 how loud it is
-        # see http://en.wikipedia.org/wiki/Bit_rate#Audio
-        sample_rate=22050 # number of samples per second
-)
-
-
+    produce_sound(eigenvalues) # produce the sound associated to the eigenvalues of the input image
