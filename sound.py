@@ -74,7 +74,7 @@ def sound_game():
     now = random.randint(0,dif-1) # moment to listen an object of the same category than sample
     for i in range(0,dif):
       time.sleep(2)
-      print("Sound " + str(i))
+      print("Sound " + str(1+i))
       if i == now:
         produce_sound(eigenvalues[category][random.randint(0,len(eigenvalues[category])-1)][1])
       else:
@@ -83,7 +83,7 @@ def sound_game():
           rand_cat = random.choice(eigenvalues.keys())
         produce_sound(eigenvalues[rand_cat][random.randint(0,len(eigenvalues[rand_cat])-1)][1])
     answer = int(input("Which one of these sounds was %s?\n" % category))
-    if answer == now:
+    if answer-1 == now:
         print("Success")
     else:
         print("Fail")
