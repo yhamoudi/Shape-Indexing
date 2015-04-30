@@ -6,6 +6,8 @@ Dépendances :
   - numpy
   - matplotlib
   - scipy (+ Pillow)
+  - PyAudio
+  - scikit-learn
 
 Charger et afficher une image : 
 

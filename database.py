@@ -107,7 +107,7 @@ class EuclideanClassifier:
         return float(correct_answers)/float(labels.shape[0])
 
 
-if __name__ == "___main__":
+if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Build the data set')
     parser.add_argument('eigenvalues', metavar='F', help='the file where are stored the eigenvalues')
     parser.add_argument('--niters', help='number of iterations (to reduce the std)', type=int)
