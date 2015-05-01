@@ -138,7 +138,7 @@ Les valeurs propres du Laplacien de Dirichlet vérifient un certain nombre de pr
 \end{table}
 
 ~\\
-\underline{Bruit} Le bruit peut déformer le domaine de l'image et modifier par conséquent les valeurs propres. Cependant, les premières valeurs propres ($\lambda_1, \lambda_2, \lambda_3, \dots$) correspondent aux harmoniques de plus haut rang, et donc aux composantes de la solution au Laplacien de Dirichlet de longueur d'onde élevée. Par conséquence, on peut s'attendre à ce qu'une déformation relativement faible du contour impacte peu ces valeurs (contrairement aux valeurs associées à des longueurs d'onde faibles). {\large \textcolor{red}{Vrai ?}} Par ailleurs, le redimensionnement systématique de l'image que l'on applique permet de gommer partiellement le bruit.
+\underline{Bruit} Le bruit peut déformer le domaine de l'image et modifier par conséquent les valeurs propres. Cependant, les premières valeurs propres ($\lambda_1, \lambda_2, \lambda_3, \dots$) correspondent à la fondamentale et aux premières harmoniques, et donc aux composantes de la solution au Laplacien de Dirichlet de longueur d'onde élevé. Par conséquent, on peut s'attendre à ce qu'une déformation relativement faible du contour impacte peu ces valeurs (contrairement aux valeurs associées à des longueurs d'onde faibles). {\large \textcolor{red}{Vrai ?}} Par ailleurs, le redimensionnement systématique de l'image que l'on applique permet de gommer partiellement le bruit.
 
 Afin de tester la robustesse au bruit, nous avons implémenté un modèle de bruit de Kanungo (pour un facteur de bruit $0 \leq a \leq 1$, tout point $x$ du domaine à distance $d$ du bord est colorié en noir avec probabilité $a^d$). La table \ref{bruit} démontre le faible impact du bruit sur les valeurs propres.
 
@@ -180,7 +180,13 @@ Afin de tester la robustesse au bruit, nous avons implémenté un modèle de bru
 
 \section*{Bonus}
 
-Nous avons essayé de reconstruire un son à partir des valeurs propres du Laplacien de Dirichlet. Pour cela, {\large \textcolor{red}{explication du procédé utilisé}}
+Nous avons essayé de reconstruire un son à partir des valeurs propres du Laplacien de Dirichlet. Pour cela, à partir du spectre des valeurs propres $\{\lambda_1, \lambda_2, ...\}$ de l'image, on en déduit les fréquences pouvant se propager dans la cavité définie par l'image, de la forme $\{\alpha \sqrt{\lambda_1}, \alpha \sqrt{\lambda_2}, ...\}$, $\alpha$ étant une constante choisie de façon à ce que le spectre obtenu soit compris entre 100Hz et 2kHz.
+
+En pratique, $\alpha = 40$, on ne retient que 3 valeurs propres. Enfin on associe la même puissance à chacune des 3 fréquences calculées.
+
+On peut s'amuser à changer ces différents paramètres pour entendre des sons différents.
+
+
 
 Afin d'entendre le son associé à l'image \texttt{beetle-11.pgm} par exemple, entrer : 
 \begin{center}
