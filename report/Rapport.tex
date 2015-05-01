@@ -89,6 +89,11 @@
 
   \subsection{Sensibilité aux perturbations}
 
+Les valeurs propres du Laplacien de Dirichlet vérifient un certain nombre de propriétés mathématiques qui garantissent que notre descripteur est insensible au redimensionnement, à la rotation et à la translation. Nous vérifions expérimentalement ces propriétés ci-dessous.
+
+\underline{Redimensionnement} Etant donné un domaine $\Omega$ et un facteur $a > 0$, on a $\lambda_k(a \Omega) = \frac{\lambda_k(\Omega)}{a^2}$. Or, notre descripteur utilise des rapports de valeurs propres, il est donc inchangé par redimensionnement : $\frac{\lambda_k(a \Omega)}{\lambda_m(a \Omega)} = \frac{\lambda_k(\Omega)}{\lambda_m(\Omega)}$.
+
+
 
 %#############################################################################################################%
 %#############################################################################################################%
