@@ -36,10 +36,10 @@ class Image:
         self.image = misc.imresize(self.image, alpha)
         self.image = np.vectorize(lambda x: x > 0.5)(self.image)
 
-    def normalize(self):
+    def normalize(self,size):
         self.__reverse_colors()  # reverse colors if the picture itself was white
-        self.__crop()            # crop the image until all borders contain a white pixel
-        self.resize(50)          # resize the image (largest side has size 50)
+        self.crop()            # crop the image until all borders contain a white pixel
+        self.resize(size)        # resize the image (largest side has size "size")
         self.__add_black_edges() # add a black border all around the image
 
     def rotate(self,angle): # rotate (and resize in order not to crop the initial image)
@@ -123,7 +123,7 @@ class Image:
             self.image = self.image[:, 0:self.width()-1]
             return self.__remove_last_column()
 
-    def __crop(self):
+    def crop(self):
         self.__remove_last_column()
         self.__remove_first_column()
         self.__remove_first_line()

@@ -37,9 +37,11 @@ def generate_laplacian_matrix(height, width):
 def compute_eigenvalues(img):
     height = img.shape[0]
     width = img.shape[1]
-    img.resize(height*width,1)
+    img_flat = np.empty_like(img)
+    img_flat[:] = img
+    img_flat.resize(height*width,1)
     M = generate_laplacian_matrix(height, width)
-    laplacian = M * img
+    laplacian = M * img_flat
     w= np.linalg.eigvals(laplacian).real
     w = w[w<-0.001]
     return sorted(-w)
@@ -90,7 +92,7 @@ if __name__ == "__main__":
     def parallel_compute_eigenvalues(name):
         if not name in output:
             im = Image(args.dir+'/'+name)
-            im.normalize()
+            im.normalize(50)
             print(name + ' is processed')
             return (name, compute_eigenvalues(im.image))
 
