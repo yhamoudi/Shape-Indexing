@@ -1,0 +1,134 @@
+\documentclass[a4paper,10pt]{article} % type, taille police
+
+\usepackage[utf8]{inputenc} % encodage
+\usepackage[T1]{fontenc} % encodage
+\usepackage[french]{babel} % gestion du français
+\usepackage{amssymb} % symboles mathématiques
+\usepackage{textcomp} % flèche,  intervalle
+\usepackage{stmaryrd} % intervalle entiers
+
+\usepackage[left=3cm,right=3cm,top=3cm,bottom=3cm]{geometry} % marges
+\usepackage[hidelinks]{hyperref} % sommaire interactif dans un pdf
+\usepackage[nottoc, notlof, notlot]{tocbibind} % affichage des références dans la table des matières (?)
+\usepackage{float} % placement des figures
+\usepackage[toc,page]{appendix} % ajout d'annexes
+\usepackage{amsthm} % format des déf, prop...
+\usepackage{amsmath} % matrices, ...
+\usepackage{multirow} % fusionner cellules verticalement
+
+%\usepackage[french,ruled,vlined,linesnumbered]{algorithm2e} % affichage d'algorithmes
+\usepackage{tikz} % affichage de schémas
+\usepackage{graphicx} % affichage d'images
+\usepackage{url} % inclure des urls
+\usepackage{bbold} % fonction caractéristique 1
+
+\renewcommand{\appendixtocname}{Annexes} % renommage annexes
+\renewcommand{\appendixpagename}{Annexes}
+
+%\providecommand{\SetAlgoLined}{\SetLine} % paramètre pour algorithm2e
+%\providecommand{\DontPrintSemicolon}{\dontprintsemicolon}  % paramètre pour algorithm2e
+
+\definecolor{bgreen}{rgb}{0.30,0.70,0}
+
+\theoremstyle{definition} % pas d'italique pour le format des déf, prop...
+\newtheorem{thm}{Théorème} % \begin{thm} \end{thm}
+\newtheorem{cor}[thm]{Corollaire}
+\newtheorem{defi}[thm]{Définition}
+\newtheorem{ex}[thm]{Exemple}
+\newtheorem{lem}[thm]{Lemme}
+\newtheorem{rem}[thm]{Remarque}
+\newtheorem{conj}[thm]{Conjecture}
+
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\inorm}[2]{{\left\lVert{#1}\right\rVert_{#2}}}
+\newcommand{\infnorm}[1]{\inorm{#1}{}}
+\newcommand{\clength}[1]{\operatorname{length}(#1)}
+\newcommand{\twonorm}[1]{\inorm{#1}{2}}
+\newcommand{\gpacrec}{R_{GPAC}}
+\newcommand{\gpacpoly}{P_{GPAC}}
+\newcommand{\gpacnpoly}{NP_{GPAC}}
+\newcommand{\gpacspace}{PSPACE_{GPAC}}
+
+%#############################################################################################################%
+%#############################################################################################################%
+%#############################################################################################################%
+
+\title{Reconnaissance et indexation de formes}
+\author{Quentin Cormier \and Yassine Hamoudi}
+\date{4 mai 2015}
+
+\begin{document}
+
+\maketitle
+
+\tableofcontents
+
+%#############################################################################################################%
+%#############################################################################################################%
+%#############################################################################################################%
+
+\section{Introduction}
+
+%#############################################################################################################%
+%#############################################################################################################%
+%#############################################################################################################%
+
+\section{Méthode}
+
+
+%#############################################################################################################%
+%#############################################################################################################%
+%#############################################################################################################%
+
+\section{Résultas}
+
+%-------------------------------------------------------------------------------------------------------------%
+
+  \subsection{Sensibilité aux perturbations}
+
+
+%#############################################################################################################%
+%#############################################################################################################%
+%#############################################################################################################%
+
+\section{Discussion}
+
+%#############################################################################################################%
+%#############################################################################################################%
+%#############################################################################################################%
+
+\section{Conclusion}
+
+%#############################################################################################################%
+%#############################################################################################################%
+%#############################################################################################################%
+
+\section*{Bonus}
+
+Nous avons essayé de reconstruire un son à partir des valeurs propres du Laplacien de Dirichlet. Pour cela, {\large \textcolor{red}{explication du procédé utilisé}}
+
+Afin d'entendre le son associé à l'image \texttt{beetle-11.pgm} par exemple, entrer : 
+\begin{center}
+  \texttt{python3 sound.py database/beetle-11.pgm}
+\end{center}
+
+Nous avons également développé un petit jeu, accessible par :
+\begin{center}
+  \texttt{python3 sound\_game.py}
+\end{center}
+
+
+Il s'agit de retrouver parmi les sons de plusieurs objets celui appartenant à la même catégorie qu'un motif de départ. 
+
+%#############################################################################################################%
+%#############################################################################################################%
+%#############################################################################################################%
+
+\bibliographystyle{alpha}
+\bibliography{Biblio}
+\nocite{*}
+
+\end{document}
