@@ -16,7 +16,6 @@
 \usepackage{amsmath} % matrices, ...
 \usepackage{multirow} % fusionner cellules verticalement
 
-%\usepackage[french,ruled,vlined,linesnumbered]{algorithm2e} % affichage d'algorithmes
 \usepackage{tikz} % affichage de schémas
 \usepackage{graphicx} % affichage d'images
 \usepackage{url} % inclure des urls
@@ -24,9 +23,6 @@
 
 \renewcommand{\appendixtocname}{Annexes} % renommage annexes
 \renewcommand{\appendixpagename}{Annexes}
-
-%\providecommand{\SetAlgoLined}{\SetLine} % paramètre pour algorithm2e
-%\providecommand{\DontPrintSemicolon}{\dontprintsemicolon}  % paramètre pour algorithm2e
 
 \definecolor{bgreen}{rgb}{0.30,0.70,0}
 
@@ -43,14 +39,6 @@
 \newcommand{\Q}{\mathbb{Q}}
 \newcommand{\N}{\mathbb{N}}
 \newcommand{\Z}{\mathbb{Z}}
-\newcommand{\inorm}[2]{{\left\lVert{#1}\right\rVert_{#2}}}
-\newcommand{\infnorm}[1]{\inorm{#1}{}}
-\newcommand{\clength}[1]{\operatorname{length}(#1)}
-\newcommand{\twonorm}[1]{\inorm{#1}{2}}
-\newcommand{\gpacrec}{R_{GPAC}}
-\newcommand{\gpacpoly}{P_{GPAC}}
-\newcommand{\gpacnpoly}{NP_{GPAC}}
-\newcommand{\gpacspace}{PSPACE_{GPAC}}
 
 %#############################################################################################################%
 %#############################################################################################################%
@@ -71,6 +59,20 @@
 %#############################################################################################################%
 
 \section{Introduction}
+
+Il existe de nombreuses manières de caractériser une image en vue de reconnaître l'objet qu'elle représente. Cependant, la plupart des descripteurs ``élémentaires'' (périmètre de l'image, nombre de composantes connexes, surface ...) sont peu efficaces individuellement et nécessitent d'être combinés astucieusement pour donner de bons résultats.
+
+Nous avons recherché un moyen robuste et plus concis de classifier en 70 catégories le millier d'images du projet. Notre méthode consiste à étudier la propagation d'une onde à l'intérieur d'une image. En effet, cette propagation dépend directement de la forme de l'objet. De la même manière que deux tambours de forme circulaire renvoient des sons similaires, deux images de pommes devraient propager les ondes de façon identiques. Par ailleurs, cette méthode semble insensible à de nombreuses perturbations (rotation, translation, dilatation...).
+
+Notre travaille s'inspire de \cite{Zuliani04} et \cite{KhabouHR07}. Nous étudierons dans un premier temps quels descripteurs peuvent être construits à partir du problème de la propagation d'une onde dans une image. Nous chercherons également la métrique la plus appropriée pour comparer deux vecteurs descripteurs associés à deux images. La robustesse de notre algorithme à différentes perturbations (rotation, bruit...) sera également vérifiée théoriquement et expérimentalement.
+
+%#############################################################################################################%
+%#############################################################################################################%
+%#############################################################################################################%
+
+\section{Méthode}
+
+% mettre des exemples d'images après normalisation
 
 L'objectif est de classifier un certain nombre d'images noir et blancs en une catégorie parmi 70 possibles.
 On dispose pour cela d'une dizaine d'images "d'entraînement" par catégories (le \textit{training set}, noté $T$).
@@ -100,15 +102,6 @@ On choisit ici d'utiliser un descripteur inspiré par la physique qui respecte, 
 En physique, il est bien connu qu'une onde stationnaire se propageant dans une cavité ne peut se propager seulement qu'en certaines fréquences discrètes qui dépendent de la forme de la cavité.
 
 Une onde dans une cavité vérifie l'équation suivante : $$\Delta E + \frac{1}{v^2} \frac{\partial^2 E}{\partial t^2} = 0$$ avec par exemple : $E$ nulle sur les bords de la cavité (condition aux limites de Dirichlet).
-
-
-
-
-
-
-\section{Méthode}
-
-% mettre des exemples d'images après normalisation
 
 %#############################################################################################################%
 %#############################################################################################################%
@@ -197,7 +190,7 @@ Afin de tester la robustesse au bruit, nous avons implémenté un modèle de bru
 
   \subsection{Performances}
 
-Nous avons testé notre algorithme avec 5 distances différentes: 
+Nous avons testé notre algorithme avec 4 distances différentes: 
 \begin{itemize}
   \item Distance euclidienne : $d(x,y) = \sqrt{\sum_{i=1}^n (x_i-y_i)^2}$.
   \item Distance de Minkowski (facteur 10) : $d(x,y) = \left(\sum_{i=1}^n (x_i-y_i)^{10}\right)^{1/10}$.
@@ -207,7 +200,7 @@ Nous avons testé notre algorithme avec 5 distances différentes:
 
 Nous avons utilisé soit des descripteurs de type 1 ($\lambda_1/\lambda_2, \lambda_1/\lambda_3, \lambda_1/\lambda_4, \dots$), soit de type 2 ($\lambda_1/\lambda_2, \lambda_2/\lambda_3, \lambda_3/\lambda_4, \dots$).
 
-Etant donné un descripteur (de taille fixée) et une distance, nous avons séparés les 1050 images en deux catégories : un train set (composé d'environ 80\% des images) et un test set (constitué des images restantes). Pour chaque image du test set nous avons recherché l'image du train set qui minimise la distance utilisée. L'algorithme de classification réussit si les deux images appartiennent à la même catégorie.
+Etant donné un descripteur (de taille fixée) et une distance, nous avons séparé les 1050 images en deux catégories : un train set (composé d'environ 80\% des images) et un test set (constitué des images restantes). Pour chaque image du test set nous avons recherché l'image du train set qui minimise la distance utilisée. L'algorithme de classification réussit si les deux images appartiennent à la même catégorie.
 
 Nous avons répété 20 fois l'expérience précédente (parallélisée sur 4 coeurs) afin d'obtenir des écarts types inférieurs à 0.03. Les pourcentages de réussites sont regroupés figure \ref{d1} pour le descripteur 1 et figure \ref{d2} pour le descripteur 2.
 
@@ -228,6 +221,8 @@ Nous avons répété 20 fois l'expérience précédente (parallélisée sur 4 co
 %#############################################################################################################%
 
 \section{Discussion}
+
+% images avec même ondes
 
 %#############################################################################################################%
 %#############################################################################################################%
