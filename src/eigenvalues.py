@@ -1,11 +1,9 @@
 #!/usr/bin/env python3
 
-import sys
 import argparse
 import pickle
 from multiprocessing import Pool
 import os.path
-import scipy.misc
 from image import Image
 import numpy as np
 

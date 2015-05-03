@@ -88,18 +88,22 @@ class DistanceClassifier:
         descriptor_size = train_set.shape[1]-1
         self.input_matrix = train_set[:, 0:descriptor_size]
         self.labels = train_set[:, descriptor_size].astype(int)
-        self.distance = self.euclidean_distance
+        self.distance = self.cosine_distance
 
-    def euclidean_distance(self, a, b):
+    @staticmethod
+    def euclidean_distance(a, b):
         return scipy.spatial.distance.euclidean(a, b)
 
-    def minkowski_distance(self, a, b):
+    @staticmethod
+    def minkowski_distance(a, b):
         return scipy.spatial.distance.minkowski(a, b, 10)
 
-    def sqeuclidean_distance(self, a, b):
+    @staticmethod
+    def sqeuclidean_distance(a, b):
         return scipy.spatial.distance.sqeuclidean(a, b)
 
-    def cosine_distance(self, a, b):
+    @staticmethod
+    def cosine_distance(a, b):
         return scipy.spatial.distance.cosine(a, b)
 
     def classify(self, normalized_descriptor):

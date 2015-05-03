@@ -19,6 +19,10 @@ if __name__ == "__main__":
     im = image.Image(args.file)
     im.normalize(50)
     im_eigenvalues = compute_eigenvalues(im.image)
+
+    #print(compute_descriptor(im_eigenvalues))
+    #print(compute_descriptor(eigenvalues['watch-13.pgm']))
+
     im_descriptor = compute_descriptor(im_eigenvalues)
 
     data_set = database.DataSet(1.0, classes)
