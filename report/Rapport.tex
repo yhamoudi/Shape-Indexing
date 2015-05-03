@@ -167,9 +167,31 @@ Afin de tester la robustesse au bruit, nous avons implémenté un modèle de bru
 
   \subsection{Performances}
 
-\includegraphics[scale=1.15]{../plot/courbe1.pdf}
+Nous avons testé notre algorithme avec 5 distances différentes: 
+\begin{itemize}
+  \item Distance euclidienne : $d(x,y) = \sqrt{\sum_{i=1}^n (x_i-y_i)^2}$.
+  \item Distance de Minkowski (facteur 10) : $d(x,y) = \left(\sum_{i=1}^n (x_i-y_i)^{10}\right)^{1/10}$.
+  \item Distance euclidienne carrée (sqeuclidean) : $d(x,y) = \sum_{i=1}^n (x_i-y_i)^2$.
+  \item Distance cosine : $d(x,y) = 1 - \frac{\sum_{i=1}^n (x_i-y_i)^2}{\lVert x \rVert_2 \lVert y \rVert_2}$.
+\end{itemize}
 
-\includegraphics[scale=1.15]{../plot/courbe2.pdf}
+Nous avons utilisé soit des descripteurs de type 1 ($\lambda_1/\lambda_2, \lambda_1/\lambda_3, \lambda_1/\lambda_4, \dots$), soit de type 2 ($\lambda_1/\lambda_2, \lambda_2/\lambda_3, \lambda_3/\lambda_4, \dots$).
+
+Etant donné un descripteur (de taille fixée) et une distance, nous avons séparés les 1050 images en deux catégories : un train set (composé d'environ 80\% des images) et un test set (constitué des images restantes). Pour chaque image du test set nous avons recherché l'image du train set qui minimise la distance utilisée. L'algorithme de classification réussit si les deux images appartiennent à la même catégorie.
+
+Nous avons répété 20 fois l'expérience précédente (parallélisée sur 4 coeurs) afin d'obtenir des écarts types inférieurs à 0.03. Les pourcentages de réussites sont regroupés figure \ref{d1} pour le descripteur 1 et figure \ref{d2} pour le descripteur 2.
+
+\begin{figure}[H]
+  \includegraphics[scale=1.15]{../plot/courbe1.pdf}
+\caption{Performances du descripteur 1 selon la distance utilisée}
+\label{d1}
+\end{figure}
+
+\begin{figure}[H]
+  \includegraphics[scale=1.15]{../plot/courbe2.pdf}
+\caption{Performances du descripteur 2 selon la distance utilisée}
+\label{d2}
+\end{figure}
 
 %#############################################################################################################%
 %#############################################################################################################%
