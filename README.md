@@ -1,7 +1,7 @@
 # Shape-Indexing
 A binary shape indexing/retrieval system
 
-Nos outils sont développés en python 3. Ils requièrent l'installation des packages suivant (pip3 install nom_du_package --user) : 
+Nos outils sont développés en python 3. Ils requièrent l'installation des packages suivants (pip3 install nom_du_package --user) : 
   - numpy
   - matplotlib
   - Pillow
