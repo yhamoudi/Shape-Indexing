@@ -26,6 +26,6 @@ if __name__ == "__main__":
     v1 = r[0]
     v2 = r[1]
 
-    distance = scipy.spatial.distance.cosine(v1, v2)
+    distance = scipy.spatial.distance.cosine(v1, v2) # cosine distance
 
     print(distance)

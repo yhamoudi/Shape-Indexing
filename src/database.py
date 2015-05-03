@@ -88,7 +88,7 @@ class DistanceClassifier:
         descriptor_size = train_set.shape[1]-1
         self.input_matrix = train_set[:, 0:descriptor_size]
         self.labels = train_set[:, descriptor_size].astype(int)
-        self.distance = self.cosine_distance
+        self.distance = self.cosine_distance # distance to use
 
     @staticmethod
     def euclidean_distance(a, b):

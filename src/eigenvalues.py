@@ -56,12 +56,12 @@ def arrange_eigenvalues(eigenvalues): # produce a structured database
     return output
 
 
-def compute_descriptor(eigenvalues):
+def compute_descriptor(eigenvalues): # descriptor to use
     descriptor = []
-    for i in range(1, 30):
+    for i in range(1, 30): # descriptor of type 1
         descriptor.append(eigenvalues[0]/eigenvalues[i])
 
-    #for i in range(1, 10):
+    #for i in range(1, 10): # descriptor of type 2
     #    descriptor.append(eigenvalues[i]/eigenvalues[i+1])
 
     return descriptor
