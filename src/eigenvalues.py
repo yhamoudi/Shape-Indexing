@@ -51,8 +51,8 @@ def compute_descriptor(eigenvalues):
     for i in range(1, 30):
         descriptor.append(eigenvalues[0]/eigenvalues[i])
 
-    #for i in range(1, 10):
-    #    descriptor.append(eigenvalues[i]/eigenvalues[i+1])
+    for i in range(1, 10):
+        descriptor.append(eigenvalues[i]/eigenvalues[i+1])
 
     return descriptor
 

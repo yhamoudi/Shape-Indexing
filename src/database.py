@@ -86,10 +86,19 @@ class EuclideanClassifier:
         descriptor_size = train_set.shape[1]-1
         self.input_matrix = train_set[:, 0:descriptor_size]
         self.labels = train_set[:, descriptor_size].astype(int)
+        self.distance = self.cosine_distance
 
-    @staticmethod
-    def distance(a, b):
+    def euclidean_distance(self, a, b):
         return scipy.spatial.distance.euclidean(a, b)
+
+    def minkowski_distance(self, a, b):
+        return scipy.spatial.distance.minkowski(a, b, 10)
+
+    def sqeuclidean_distance(self, a, b):
+        return scipy.spatial.distance.sqeuclidean(a, b)
+
+    def cosine_distance(self, a, b):
+        return scipy.spatial.distance.cosine(a, b)
 
     def classify(self, normalized_descriptor):
         f = lambda v: self.distance(v, normalized_descriptor)
@@ -160,7 +169,7 @@ if __name__ == "__main__":
             classifier.train()
         return classifier.evaluation(test_set)
 
-    pool = Pool(2)
+    pool = Pool(4)
     m_test = pool.map(f, [0]*args.niters)
 
     print(m_test)

@@ -95,7 +95,7 @@ Nous exposons les résultats obtenus grâce à la méthode détaillée précéde
 Les valeurs propres du Laplacien de Dirichlet vérifient un certain nombre de propriétés mathématiques qui garantissent que notre descripteur est insensible au redimensionnement, à la rotation et à la translation. Nous vérifions expérimentalement ces propriétés ci-dessous.
 
 ~\\
-\underline{Redimensionnement} Etant donné un domaine $\Omega$ et un facteur $a > 0$, on a $\lambda_k(a \Omega) = \frac{\lambda_k(\Omega)}{a^2}$ (voir \cite{KhabouHR07}). Or, notre descripteur utilise des rapports de valeurs propres, il est donc inchangé par redimensionnement : $\frac{\lambda_k(a \Omega)}{\lambda_m(a \Omega)} = \frac{\lambda_k(\Omega)}{\lambda_m(\Omega)}$. Nous avons calculé différents rapports pour l'image \texttt{camel-1.pgm}, les résultats figurent table \ref{scale}. Les variations d'une image à l'autre peuvent s'expliquer par les dégrations des contours suite au redimensionnement. Les rapports restent tout de même très proches. En pratique, nous utilions une longueur de 50 pixels afin d'obtenir des temps de calcul raisonnables (environ 20s pour calculer les valeurs propres associées à une image de taille 50x50).
+\underline{Redimensionnement} Etant donné un domaine $\Omega$ et un facteur $a > 0$, on a $\lambda_k(a \Omega) = \frac{\lambda_k(\Omega)}{a^2}$ (voir \cite{KhabouHR07}). Or, notre descripteur utilise des rapports de valeurs propres, il est donc inchangé par redimensionnement : $\frac{\lambda_k(a \Omega)}{\lambda_m(a \Omega)} = \frac{\lambda_k(\Omega)}{\lambda_m(\Omega)}$. Nous avons calculé différents rapports pour l'image \texttt{camel-1.pgm}, les résultats figurent table \ref{scale}. Les variations d'une image à l'autre peuvent s'expliquer par les dégrations des contours suite au redimensionnement. Les rapports restent tout de même très proches. En pratique, nous utilisons une longueur de 50 pixels afin d'obtenir des temps de calcul raisonnables (environ 20s pour calculer les valeurs propres associées à une image de taille 50x50).
 
 \begin{table}[H]
   \begin{center}
@@ -162,6 +162,15 @@ Afin de tester la robustesse au bruit, nous avons implémenté un modèle de bru
   \caption{Valeurs propres associées à \texttt{beetle-13.pgm} en fonctions du facteur de bruit}
   \label{bruit}
 \end{table}
+
+%-------------------------------------------------------------------------------------------------------------%
+
+  \subsection{Performances}
+
+\includegraphics[scale=1.15]{../plot/courbe1.pdf}
+
+\includegraphics[scale=1.15]{../plot/courbe2.pdf}
+
 %#############################################################################################################%
 %#############################################################################################################%
 %#############################################################################################################%
