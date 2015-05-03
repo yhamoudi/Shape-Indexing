@@ -9,7 +9,7 @@ reset
 stats 'courbe1' every ::::0 using 1 nooutput
 NB_ALGOS = int(STATS_min)
 
-set title sprintf('Performances du descripteur 1 selon la distance utilisée')
+#set title sprintf('Performances du descripteur 1 selon la distance utilisée')
 set xlabel "Taille du descripteur"
 set ylabel "Pourcentage de réussite sur le test set"
 
