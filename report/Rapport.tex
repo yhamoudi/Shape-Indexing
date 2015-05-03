@@ -62,25 +62,21 @@
 
 Il existe de nombreuses manières de caractériser une image en vue de reconnaître l'objet qu'elle représente. Cependant, la plupart des descripteurs ``élémentaires'' (périmètre de l'image, nombre de composantes connexes, surface ...) sont peu efficaces individuellement et nécessitent d'être combinés astucieusement pour donner de bons résultats.
 
-Nous avons recherché un moyen robuste et plus concis de classifier en 70 catégories le millier d'images du projet. Notre méthode consiste à étudier la propagation d'une onde à l'intérieur d'une image. En effet, cette propagation dépend directement de la forme de l'objet. De la même manière que deux tambours de forme circulaire renvoient des sons proches, deux images de pommes devraient propager les ondes de façon similaires. Par ailleurs, cette méthode semble insensible à de nombreuses perturbations (rotation, translation, dilatation...).
+Nous avons recherché un moyen robuste et plus concis de classifier en 70 catégories le millier d'images du projet. Notre méthode consiste à étudier la propagation d'une onde à l'intérieur d'une image. En effet, cette propagation dépend directement de la forme de l'objet. De la même manière que deux tambours de forme circulaire renvoient des sons similaires, deux images de pommes devraient propager les ondes de façon identiques. Par ailleurs, cette méthode semble insensible à de nombreuses perturbations (rotation, translation, dilatation...).
 
-Notre travaille s'inspire de \cite{Zuliani04} et \cite{KhabouHR07}. Nous étudierons dans un premier temps quels descripteurs peuvent être construits à partir du problème de la propagation d'une onde dans une image. Nous chercherons également la métrique la plus appropriée pour comparer deux vecteurs descripteurs associés à deux images. La robustesse de notre algorithme à différentes perturbations (rotation, bruit...) sera également vérifiée théoriquement et expérimentalement.
-
-%#############################################################################################################%
-%#############################################################################################################%
-%#############################################################################################################%
+Notre travail s'inspire de \cite{Zuliani04} et \cite{KhabouHR07}. Nous étudierons dans un premier temps quels descripteurs peuvent être construits à partir du problème de la propagation d'une onde dans une image. Nous chercherons également la métrique la plus appropriée pour comparer deux vecteurs descripteurs associés à deux images. La robustesse de notre algorithme à différentes perturbations (rotation, bruit...) sera également vérifiée théoriquement et expérimentalement.
 
 \section{Méthode}
 
 L'objectif est de classifier un certain nombre d'images noir et blancs en une catégorie parmi 70 possibles.
 On dispose pour cela d'une dizaine d'images "d'entraînement" par catégories (le \textit{training set}, noté $T$).
 
-A partir de ces images d'entrainement on doit pouvoir classifier une image inconnu dans l'une de ses 70 catégories.
+A partir de ces images d'entrainement on doit pouvoir classifier une image inconnu dans l'une de ces 70 catégories.
 
 Au vu de la taille relativement restreinte du \textit{training set}, on décide d'encoder l'image en un vecteur de réels (le \textit{descripteur} associé à l'image), et d'utiliser 
 une distance entre deux descripteurs pour classifier une image inconnue.
 
-Ainsi, pour une image inconnue $M$, on calcule le descripteur associé $d_M$, puis on cherche l'image la plus proche dans le \textit{training set} : $$M' = argmin_{M' \in T}{d(d_M, d_{M'})}_,   $$ $d$ étant la distance choisie.
+Ainsi, pour une image inconnue $M$, on calcule le descripteur associé $d_M$, puis on cherche l'image la plus proche dans le \textit{training set} : $$M' = argmin_{M' \in T}{d(d_M, d_{M'})}_,   $$ $d$ étant la distance entre descripteurs choisie.
 
 On prédit alors la classe de $M$ comme étant la même que celle de $M'$
 
@@ -98,8 +94,16 @@ On choisit ici d'utiliser un descripteur inspiré par la physique qui respecte, 
 \subsection*{Onde associé à un domaine}
 
 En physique, il est bien connu qu'une onde stationnaire se propageant dans une cavité ne peut se propager seulement qu'en certaines fréquences discrètes qui dépendent de la forme de la cavité.
+On se propose de construire un descripteur basé sur ces fréquences. On comprends bien qu'il sera facile de garantir l'invariance par rotation et translation : tourner ou bouger la cavité ne change pas les fréquences qui peuvent se propager dans ladite cavité !
 
-Une onde dans une cavité vérifie l'équation suivante : $$\Delta E + \frac{1}{v^2} \frac{\partial^2 E}{\partial t^2} = 0$$ avec par exemple : $E$ nulle sur les bords de la cavité (condition aux limites de Dirichlet).
+Une onde dans une cavité vérifie l'équation suivante : $$\Delta E + \frac{1}{v^2} \frac{\partial^2 E}{\partial t^2} = 0$$ avec par exemple : $E(x,y,t)$ nulle sur les bords de la cavité (condition aux limites de Dirichlet).
+
+Si l'on recherche les solutions stationnaires, on pose $E = f(x,y)e^{iwt}$, et on obtient : 
+$$ \Delta f  - \frac{w^2}{v^2} f  = 0 _, $$$f$ s'annulant sur les bords de la cavité.
+
+Ainsi, on peut voir $f$ comme un vecteur propre de l'opérateur Laplacian et $\frac{w^2}{v^2}$ la valeur propre associée.
+
+\subsection*{Calcul du descripteur}
 
 \subsection{Normalisation des images}
 
