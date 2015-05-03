@@ -1,11 +1,9 @@
 #!/usr/bin/env python3
 
-import sys
 import argparse
 import pickle
 from multiprocessing import Pool
 import os.path
-import scipy.misc
 from image import Image
 import numpy as np
 
@@ -46,6 +44,7 @@ def compute_eigenvalues(img):
     w = w[w<-0.001]
     return sorted(-w)
 
+
 def arrange_eigenvalues(eigenvalues): # produce a structured database
     output = {}
     for image in eigenvalues:
@@ -55,6 +54,7 @@ def arrange_eigenvalues(eigenvalues): # produce a structured database
       else:
         output[category] = [[number,eigenvalues[image]]]
     return output
+
 
 def compute_descriptor(eigenvalues):
     descriptor = []

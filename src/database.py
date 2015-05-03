@@ -10,18 +10,17 @@ from multiprocessing import Pool
 from sklearn.lda import LDA
 from sklearn.externals import joblib
 
+
 class DataSet:
-    def __init__(self, ratio_train):
+    def __init__(self, ratio_train, classes):
         self.ratio_train = ratio_train
         self.test_set = []
         self.train_set = []
-        self.classes = {}
+        self.classes = classes
         self.mean = None
         self.std = None
 
     def add(self, category_name, descriptor):
-        if not(category_name in self.classes):
-            self.classes[category_name] = len(self.classes) + 1
         id_category = self.classes[category_name]
         entry = np.array(descriptor + [float(id_category)], dtype=float)
         if random.random() < self.ratio_train:
@@ -41,6 +40,10 @@ class DataSet:
         matrix[:, 0:matrix.shape[1]-1] = (matrix[:, 0:matrix.shape[1]-1] - self.mean) / self.std
         return matrix
 
+    def normalize_vector(self, vector):
+        return (vector - self.mean) / self.std
+
+
 class LinearDiscriminantAnalysis(object):
     def __init__(self, input_matrix, labels):
         self.x = input_matrix
@@ -55,6 +58,7 @@ class LinearDiscriminantAnalysis(object):
 
     def save_model(self, file):
         joblib.dump(self.clf, file)
+
 
 class LinearClassifier:
     def __init__(self, train_set):
@@ -78,23 +82,28 @@ class LinearClassifier:
 
         return ratio_correct_answers
 
-class EuclideanClassifier:
+
+class DistanceClassifier:
     def __init__(self, train_set):
         descriptor_size = train_set.shape[1]-1
         self.input_matrix = train_set[:, 0:descriptor_size]
         self.labels = train_set[:, descriptor_size].astype(int)
         self.distance = self.cosine_distance
 
-    def euclidean_distance(self, a, b):
+    @staticmethod
+    def euclidean_distance(a, b):
         return scipy.spatial.distance.euclidean(a, b)
 
-    def minkowski_distance(self, a, b):
+    @staticmethod
+    def minkowski_distance(a, b):
         return scipy.spatial.distance.minkowski(a, b, 10)
 
-    def sqeuclidean_distance(self, a, b):
+    @staticmethod
+    def sqeuclidean_distance(a, b):
         return scipy.spatial.distance.sqeuclidean(a, b)
 
-    def cosine_distance(self, a, b):
+    @staticmethod
+    def cosine_distance(a, b):
         return scipy.spatial.distance.cosine(a, b)
 
     def classify(self, normalized_descriptor):
@@ -115,7 +124,7 @@ class EuclideanClassifier:
         classes_dst = np.zeros(nb_classes)
         for i in range(0, nb_classes):
             di = np.min(distances[np.where(self.labels == i+1)])
-            if di < 0.0000001:
+            if di < 0.00001:
                 classes_dst = np.zeros(nb_classes)
                 classes_dst[i] = 1
                 return classes_dst
@@ -137,9 +146,20 @@ class EuclideanClassifier:
         correct_answers = np.sum(estimated_answers == labels)
         return float(correct_answers)/float(labels.shape[0])
 
+
+def load_classes(file_classes):
+    with open(file_classes, 'r') as csv_file:
+        classes = {}
+        i = 1
+        for line in csv_file:
+            classes[line.split(',')[0]] = i
+            i += 1
+        return classes
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Build the data set')
     parser.add_argument('eigenvalues', metavar='F', help='the file where are stored the eigenvalues')
+    parser.add_argument('--classes', metavar='F', help='the file where are stored the classes')
     parser.add_argument('--niters', help='number of iterations (to reduce the std)', type=int)
     parser.add_argument('--LDA', dest='lda', action='store_true')
 
@@ -147,10 +167,13 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
+    classes = load_classes(args.classes)
+    print(classes)
+
     eigenvalues = pickle.load(open(args.eigenvalues, "rb"))
 
     def f(i):
-        data_set = DataSet(0.80)
+        data_set = DataSet(0.80, classes)
         for name in eigenvalues:
             ev_list = eigenvalues[name]
             category = name.split('-')[0]
@@ -159,7 +182,7 @@ if __name__ == "__main__":
         train_set = data_set.get_train_set()
         test_set = data_set.get_test_set()
         if not args.lda:
-            classifier = EuclideanClassifier(train_set)
+            classifier = DistanceClassifier(train_set)
         else:
             classifier = LinearClassifier(train_set)
             classifier.train()
