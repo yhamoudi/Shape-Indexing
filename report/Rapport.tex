@@ -62,7 +62,7 @@
 
 Il existe de nombreuses manières de caractériser une image en vue de reconnaître l'objet qu'elle représente. Cependant, la plupart des descripteurs ``élémentaires'' (périmètre de l'image, nombre de composantes connexes, surface ...) sont peu efficaces individuellement et nécessitent d'être combinés astucieusement pour donner de bons résultats.
 
-Nous avons recherché un moyen robuste et plus concis de classifier en 70 catégories le millier d'images du projet. Notre méthode consiste à étudier la propagation d'une onde à l'intérieur d'une image. En effet, cette propagation dépend directement de la forme de l'objet. De la même manière que deux tambours de forme circulaire renvoient des sons similaires, deux images de pommes devraient propager les ondes de façon identiques. Par ailleurs, cette méthode semble insensible à de nombreuses perturbations (rotation, translation, dilatation...).
+Nous avons recherché un moyen robuste et concis de classifier en 70 catégories le millier d'images du projet. Notre méthode consiste à étudier la propagation d'une onde à l'intérieur d'une image. En effet, cette propagation dépend directement de la forme de l'objet. De la même manière que deux tambours de forme circulaire renvoient des sons similaires, deux images de pommes devraient propager les ondes de façon identiques. Par ailleurs, cette méthode semble insensible à de nombreuses perturbations (rotation, translation, dilatation...).
 
 Notre travail s'inspire de \cite{Zuliani04} et \cite{KhabouHR07}. Nous étudierons dans un premier temps quels descripteurs peuvent être construits à partir du problème de la propagation d'une onde dans une image. Nous chercherons également la métrique la plus appropriée pour comparer deux vecteurs descripteurs associés à deux images. La robustesse de notre algorithme à différentes perturbations (rotation, bruit...) sera également vérifiée théoriquement et expérimentalement.
 
@@ -71,7 +71,7 @@ Notre travail s'inspire de \cite{Zuliani04} et \cite{KhabouHR07}. Nous étudiero
 L'objectif est de classifier un certain nombre d'images noir et blancs en une catégorie parmi 70 possibles.
 On dispose pour cela d'une dizaine d'images "d'entraînement" par catégories (le \textit{training set}, noté $T$).
 
-A partir de ces images d'entrainement on doit pouvoir classifier une image inconnu dans l'une de ces 70 catégories.
+A partir de ces images d'entrainement on doit pouvoir classifier une image inconnue dans l'une de ces 70 catégories.
 
 Au vu de la taille relativement restreinte du \textit{training set}, on décide d'encoder l'image en un vecteur de réels (le \textit{descripteur} associé à l'image), et d'utiliser 
 une distance entre deux descripteurs pour classifier une image inconnue.
@@ -105,6 +105,55 @@ Ainsi, on peut voir $f$ comme un vecteur propre de l'opérateur Laplacian et $\f
 
 \subsection*{Calcul du descripteur}
 
+\subsubsection*{Calcul des valeurs propres du Laplacian d'une image}
+
+Pour calculer effectivement les valeurs propres du laplacien dans le domaine définit par l'image, on "encode" l'image de taille $N = n*n$ dans un vecteur de taille $n^2$.
+On construit alors la matrice de l'opérateur Laplacian discretisé $\Delta^*$ suivant, de taille N*N: 
+$$
+\Delta^* =
+ \begin{pmatrix}
+  -A_n & I_n & \cdots & 0 \\
+  I_n & -A_n & \ddots &   \vdots \\
+  \vdots  & \ddots  & \ddots & I_n  \\
+  0 & \cdots  & I_n & -A_n
+ \end{pmatrix}
+$$
+
+avec $$A_n =  
+\begin{pmatrix}
+  -4 & 1 & \cdots & 0 \\
+  1  & -4 & \ddots &   \vdots \\
+  \vdots  & \ddots  & \ddots & 1  \\
+  0 & \cdots  & 1 & -4
+ \end{pmatrix}  $$
+
+Puis mon multiplie chaque ligne $i+Nj$, $i \in \{1, ..., n\}, j \in \{1, ..., n\}$ de $\Delta^*$ par 0 ou 1, suivant la valeur du pixel $M(i,j)$.
+
+En alors : 
+\[ \Delta^* E = \left\{ 
+  \begin{array}{l l}
+    \lambda E & \quad \text{lorsque l'on est dans le domaine définit par l'image}\\
+    0 & \quad \text{sinon}
+  \end{array} \right.\]
+  
+  $E$ est un vecteur propre de taille $n*n$  de $\Delta^*$ qui correspond à une onde stationnaire associée à la valeur propre $\lambda$ pour le domaine définit par l'image.
+  
+  On peut généraliser sans problème tout cela pour des images rectangulaires de taille $N = h*w$.
+  
+  On est donc ramené à calculer les valeurs propres d'une matrice creuse. On utilise la fonction numpy.linalg.eigvals pour trouver effectivement les valeurs propres recherchées.
+  
+  
+  \subsubsection*{Calcul du descripteur associé aux valeurs propres}
+
+
+A partir du spectre trié par ordre croissant $\{\lambda_0, \lambda_1, ...\}$ calculé précédemment, on construit de manière similaire à \cite{Zuliani04} et \cite{KhabouHR07} deux familles de descripteurs : 
+\begin{itemize}
+\item $\{\frac{\lambda_0}{\lambda_1}, \frac{\lambda_0}{\lambda_2}, ... \}$
+\item $\{\frac{\lambda_0}{\lambda_1}, \frac{\lambda_1}{\lambda_2}, \frac{\lambda_2}{\lambda_3},...\}$
+\end{itemize}
+
+On discutera du choix du descripteur final à partir de tests numériques détailles dans la second partie.
+  
 \subsection{Normalisation des images}
 
 % mettre des exemples d'images après normalisation
