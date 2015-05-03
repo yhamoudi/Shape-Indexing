@@ -98,10 +98,17 @@ On choisit ici d'utiliser un descripteur inspiré par la physique qui respecte, 
 \subsection*{Onde associé à un domaine}
 
 En physique, il est bien connu qu'une onde stationnaire se propageant dans une cavité ne peut se propager seulement qu'en certaines fréquences discrètes qui dépendent de la forme de la cavité.
+On se propose de construire un descripteur basé sur ces fréquences. On comprends bien qu'il sera facile de garantir l'invariance par rotation et translation : tourner ou bouger la cavité ne change pas les fréquences qui peuvent se propager dans ladite cavité !
 
-Une onde dans une cavité vérifie l'équation suivante : $$\Delta E + \frac{1}{v^2} \frac{\partial^2 E}{\partial t^2} = 0$$ avec par exemple : $E$ nulle sur les bords de la cavité (condition aux limites de Dirichlet).
+Une onde dans une cavité vérifie l'équation suivante : $$\Delta E + \frac{1}{v^2} \frac{\partial^2 E}{\partial t^2} = 0$$ avec par exemple : $E(x,y,t)$ nulle sur les bords de la cavité (condition aux limites de Dirichlet).
 
 
+Si l'on recherche les solutions stationnaires, on pose $E = f(x,y)e^{iwt}$, et on obtient : 
+$$ \Delta f  - \frac{w^2}{v^2} f  = 0 _, $$$f$ s'annulant sur les bords de la cavité.
+
+Ainsi, on peut voit $f$ comme un vecteur propre de l'opérateur Laplacian et $\frac{w^2}{v^2}$ la valeur propre associée.
+
+\subsection*{Calcul du descripteur}
 
 
 
