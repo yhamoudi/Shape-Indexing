@@ -68,8 +68,6 @@ Notre travail s'inspire de \cite{Zuliani04} et \cite{KhabouHR07}. Nous étudiero
 
 \section{Méthode}
 
-% mettre des exemples d'images après normalisation
-
 L'objectif est de classifier un certain nombre d'images noir et blancs en une catégorie parmi 70 possibles.
 On dispose pour cela d'une dizaine d'images "d'entraînement" par catégories (le \textit{training set}, noté $T$).
 
@@ -103,10 +101,17 @@ Une onde dans une cavité vérifie l'équation suivante : $$\Delta E + \frac{1}{
 Si l'on recherche les solutions stationnaires, on pose $E = f(x,y)e^{iwt}$, et on obtient : 
 $$ \Delta f  - \frac{w^2}{v^2} f  = 0 _, $$$f$ s'annulant sur les bords de la cavité.
 
-Ainsi, on peut voit $f$ comme un vecteur propre de l'opérateur Laplacian et $\frac{w^2}{v^2}$ la valeur propre associée.
+Ainsi, on peut voir $f$ comme un vecteur propre de l'opérateur Laplacian et $\frac{w^2}{v^2}$ la valeur propre associée.
 
 \subsection*{Calcul du descripteur}
 
+\subsection{Normalisation des images}
+
+% mettre des exemples d'images après normalisation
+
+%#############################################################################################################%
+%#############################################################################################################%
+%#############################################################################################################%
 
 \section{Résultats}
 
@@ -203,7 +208,7 @@ Nous avons utilisé soit des descripteurs de type 1 ($\lambda_1/\lambda_2, \lamb
 
 Etant donné un descripteur (de taille fixée) et une distance, nous avons séparé les 1050 images en deux catégories : un train set (composé d'environ 80\% des images) et un test set (constitué des images restantes). Pour chaque image du test set nous avons recherché l'image du train set qui minimise la distance utilisée. L'algorithme de classification réussit si les deux images appartiennent à la même catégorie.
 
-Nous avons répété 20 fois l'expérience précédente (parallélisée sur 4 coeurs) afin d'obtenir des écarts types inférieurs à 0.03. Les pourcentages de réussites sont regroupés figure \ref{d1} pour le descripteur 1 et figure \ref{d2} pour le descripteur 2.
+Nous avons répété 20 fois l'expérience précédente (parallélisée sur 4 coeurs) afin d'obtenir des écarts types inférieurs à 0.03. Les pourcentages de réussites sont regroupés figure \ref{d1} pour le descripteur 1 et figure \ref{d2} pour le descripteur 2. La figure \ref{d3} illustre les performances lorsque le descripteur est composé en partie du type 1 et du type 2 (par exemple l'abscisse 30/10 correspond à un descripteur de taille 40 dont les 30 premières composantes sont de type 1 et les 10 dernières de type 2). Nous avons utilisé uniquement la métrique cosine pour ce dernier test.
 
 \begin{figure}[H]
   \includegraphics[scale=1.15]{../plot/courbe1.pdf}
@@ -217,19 +222,34 @@ Nous avons répété 20 fois l'expérience précédente (parallélisée sur 4 co
 \label{d2}
 \end{figure}
 
+\begin{figure}[H]
+  \includegraphics[scale=1.15]{../plot/courbe3.pdf}
+\caption{Performances des descripteurs  et 2 mélangés, selon la distance utilisée}
+\label{d3}
+\end{figure}
+
 %#############################################################################################################%
 %#############################################################################################################%
 %#############################################################################################################%
 
 \section{Discussion}
 
-% images avec même ondes
+Le descripteur de type 1 ($\lambda_1/\lambda_2, \lambda_1/\lambda_3, \lambda_1/\lambda_4, \dots$) se révèle plus efficace. En effet, comme on peut le constater figure \ref{d1}, quelle que soit la métrique utilisée il permet de dépasser les 60\% de réussite, alors que le descripteur de type 2 (figure \ref{d2}) ne franchit pas 56\%. Mélanger les deux descripteurs ne permet pas non plus d'augmenter les performances comme l'illustre la figure \ref{d3}.
+
+Le meilleur score est obtenu avec la métrique cosine pour un descripteur de type 1 de taille 30 (environ 70\% de réussite). Nous utilisons ces caractéristiques dans notre algorithme final.
+
+Par ailleurs, la faible sensibilité aux perturbations (rotation, dilatation, bruit...) confirme notre hypothèse de départ : lorsque le domaine de l'image est faiblement changé, la propagation des ondes est peu impactée.
+
+Afin d'améliorer la classification, plusieurs paramètres de l'algorithmes pourraient être étudiés plus en détail. Ainsi, on constate que le choix de la métrique est important (pour un descripteur fixé, les performances peuvent changer de 20\% d'une métrique à l'autre). Une approche par machine learning pourrait permettre par exemple de pondérer chaque composante du descripteur (peut-être faut-il donner d'avantage d'importance à $\lambda_1/\lambda_2$ qu'à $\lambda_1/\lambda_3$).
+
 
 %#############################################################################################################%
 %#############################################################################################################%
 %#############################################################################################################%
 
 \section{Conclusion}
+
+% images avec même ondes
 
 %#############################################################################################################%
 %#############################################################################################################%
@@ -243,16 +263,14 @@ En pratique, $\alpha = 40$, on ne retient que 3 valeurs propres. Enfin on associ
 
 On peut s'amuser à changer ces différents paramètres pour entendre des sons différents.
 
-
-
 Afin d'entendre le son associé à l'image \texttt{beetle-11.pgm} par exemple, entrer : 
 \begin{center}
-  \texttt{python3 sound.py database/beetle-11.pgm}
+  \texttt{./sound database/beetle-11.pgm}
 \end{center}
 
 Nous avons également développé un petit jeu, accessible par :
 \begin{center}
-  \texttt{python3 sound\_game.py}
+  \texttt{./sound\_game}
 \end{center}
 
 
