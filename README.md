@@ -13,12 +13,12 @@ Nos outils sont développés en python 3. Ils requièrent l'installation des pac
 
 Entendre le son associé à l'image database/beetle-11.pgm :
 ```
-  ./sound database/beetle-11.pgm
+  ./sound.sh database/beetle-11.pgm
 ```
 
 Essayer le mini-jeu de reconnaissance des sons : 
 ```
-  ./soung_game
+  ./soung_game.sh
 ```
 
 ### Description des fichiers python
