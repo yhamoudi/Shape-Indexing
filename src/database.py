@@ -86,7 +86,7 @@ class EuclideanClassifier:
         descriptor_size = train_set.shape[1]-1
         self.input_matrix = train_set[:, 0:descriptor_size]
         self.labels = train_set[:, descriptor_size].astype(int)
-        self.distance = self.cosine_distance
+        self.distance = self.euclidean_distance
 
     def euclidean_distance(self, a, b):
         return scipy.spatial.distance.euclidean(a, b)

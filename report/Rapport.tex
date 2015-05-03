@@ -62,7 +62,7 @@
 
 Il existe de nombreuses manières de caractériser une image en vue de reconnaître l'objet qu'elle représente. Cependant, la plupart des descripteurs ``élémentaires'' (périmètre de l'image, nombre de composantes connexes, surface ...) sont peu efficaces individuellement et nécessitent d'être combinés astucieusement pour donner de bons résultats.
 
-Nous avons recherché un moyen robuste et plus concis de classifier en 70 catégories le millier d'images du projet. Notre méthode consiste à étudier la propagation d'une onde à l'intérieur d'une image. En effet, cette propagation dépend directement de la forme de l'objet. De la même manière que deux tambours de forme circulaire renvoient des sons similaires, deux images de pommes devraient propager les ondes de façon identiques. Par ailleurs, cette méthode semble insensible à de nombreuses perturbations (rotation, translation, dilatation...).
+Nous avons recherché un moyen robuste et plus concis de classifier en 70 catégories le millier d'images du projet. Notre méthode consiste à étudier la propagation d'une onde à l'intérieur d'une image. En effet, cette propagation dépend directement de la forme de l'objet. De la même manière que deux tambours de forme circulaire renvoient des sons proches, deux images de pommes devraient propager les ondes de façon similaires. Par ailleurs, cette méthode semble insensible à de nombreuses perturbations (rotation, translation, dilatation...).
 
 Notre travaille s'inspire de \cite{Zuliani04} et \cite{KhabouHR07}. Nous étudierons dans un premier temps quels descripteurs peuvent être construits à partir du problème de la propagation d'une onde dans une image. Nous chercherons également la métrique la plus appropriée pour comparer deux vecteurs descripteurs associés à deux images. La robustesse de notre algorithme à différentes perturbations (rotation, bruit...) sera également vérifiée théoriquement et expérimentalement.
 
@@ -71,8 +71,6 @@ Notre travaille s'inspire de \cite{Zuliani04} et \cite{KhabouHR07}. Nous étudie
 %#############################################################################################################%
 
 \section{Méthode}
-
-% mettre des exemples d'images après normalisation
 
 L'objectif est de classifier un certain nombre d'images noir et blancs en une catégorie parmi 70 possibles.
 On dispose pour cela d'une dizaine d'images "d'entraînement" par catégories (le \textit{training set}, noté $T$).
@@ -102,6 +100,10 @@ On choisit ici d'utiliser un descripteur inspiré par la physique qui respecte, 
 En physique, il est bien connu qu'une onde stationnaire se propageant dans une cavité ne peut se propager seulement qu'en certaines fréquences discrètes qui dépendent de la forme de la cavité.
 
 Une onde dans une cavité vérifie l'équation suivante : $$\Delta E + \frac{1}{v^2} \frac{\partial^2 E}{\partial t^2} = 0$$ avec par exemple : $E$ nulle sur les bords de la cavité (condition aux limites de Dirichlet).
+
+\subsection{Normalisation des images}
+
+% mettre des exemples d'images après normalisation
 
 %#############################################################################################################%
 %#############################################################################################################%
@@ -222,13 +224,22 @@ Nous avons répété 20 fois l'expérience précédente (parallélisée sur 4 co
 
 \section{Discussion}
 
-% images avec même ondes
+Le descripteur de type 1 ($\lambda_1/\lambda_2, \lambda_1/\lambda_3, \lambda_1/\lambda_4, \dots$) se révèle plus efficace. En effet, comme on peut le constater figure \ref{d1}, quelque soit la métrique utilisée il permet de dépasser les 60\% de réussite, alors que le descripteur de type 2 (figure \ref{d2}) ne franchit pas 56\%. 
+
+Le meilleur score est obtenu avec la métrique cosine pour un descripteur de type 1 de taille 30 (environ 70\% de réussite). Nous utilisons ces caractéristiques dans notre algorithme final.
+
+Par ailleurs, la faible sensibilité aux perturbations (rotation, dilatation, bruit...) confirme notre hypothèse de départ : lorsque le domaine de l'image est faiblement changé, la propagation des ondes est peu impactée.
+
+Afin d'améliorer la classification, plusieurs paramètres de l'algorithmes pourraient être étudiés plus en détail. Ainsi, on constate que le choix de la métrique est important (pour un descripteur fixé, les performances peuvent changer de 20\% entre deux métriques différentes). Une approche par machine learning pourrait permettre par exemple de pondérer chaque composante du descripteur (peut-être faut-il donner d'avantage d'importance à $\lambda_1/\lambda_2$ qu'à $\lambda_1/\lambda_3$).
+
 
 %#############################################################################################################%
 %#############################################################################################################%
 %#############################################################################################################%
 
 \section{Conclusion}
+
+% images avec même ondes
 
 %#############################################################################################################%
 %#############################################################################################################%
