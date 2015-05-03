@@ -6,6 +6,8 @@
 *.blg
 *.toc
 *.out
+*.DS_Store
+report/Rapport.pdf
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

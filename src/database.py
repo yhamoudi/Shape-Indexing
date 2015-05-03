@@ -41,7 +41,6 @@ class DataSet:
         matrix[:, 0:matrix.shape[1]-1] = (matrix[:, 0:matrix.shape[1]-1] - self.mean) / self.std
         return matrix
 
-
 class LinearDiscriminantAnalysis(object):
     def __init__(self, input_matrix, labels):
         self.x = input_matrix
@@ -56,7 +55,6 @@ class LinearDiscriminantAnalysis(object):
 
     def save_model(self, file):
         joblib.dump(self.clf, file)
-
 
 class LinearClassifier:
     def __init__(self, train_set):
@@ -79,7 +77,6 @@ class LinearClassifier:
         ratio_correct_answers = float(correct_answers)/float(labels.shape[0])
 
         return ratio_correct_answers
-
 
 class EuclideanClassifier:
     def __init__(self, train_set):
@@ -139,7 +136,6 @@ class EuclideanClassifier:
 
         correct_answers = np.sum(estimated_answers == labels)
         return float(correct_answers)/float(labels.shape[0])
-
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Build the data set')

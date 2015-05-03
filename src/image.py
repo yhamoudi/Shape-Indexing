@@ -38,7 +38,7 @@ class Image:
 
     def normalize(self,size):
         self.__reverse_colors()  # reverse colors if the picture itself was white
-        self.crop()            # crop the image until all borders contain a white pixel
+        self.crop()              # crop the image until all borders contain a white pixel
         self.resize(size)        # resize the image (largest side has size "size")
         self.__add_black_edges() # add a black border all around the image
 
