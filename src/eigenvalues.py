@@ -46,26 +46,6 @@ def compute_eigenvalues(img):
     w = w[w<-0.001]
     return sorted(-w)
 
-def compute_descriptor(eigenvalues):
-    descriptor = []
-    for i in range(1, 10):
-        descriptor.append(eigenvalues[0]/eigenvalues[i])
-
-    for i in range(1, 10):
-        descriptor.append(eigenvalues[i]/eigenvalues[i+1])
-
-    return descriptor
-
-def eigenvalues_square(n):
-    # Creation of a square img:
-    img = np.ones((n, n), dtype=np.float)
-    img[:, 0] = np.zeros(n)
-    img[:, n-1] = np.zeros(n)
-    img[0, :] = np.zeros(n)
-    img[n-1, :] = np.zeros(n)
-
-    return compute_eigenvalues(img)
-
 def arrange_eigenvalues(eigenvalues): # produce a structured database
     output = {}
     for image in eigenvalues:
@@ -75,6 +55,16 @@ def arrange_eigenvalues(eigenvalues): # produce a structured database
       else:
         output[category] = [[number,eigenvalues[image]]]
     return output
+
+def compute_descriptor(eigenvalues):
+    descriptor = []
+    for i in range(1, 60):
+        descriptor.append(eigenvalues[0]/eigenvalues[i])
+
+    for i in range(1, 10):
+        descriptor.append(eigenvalues[i]/eigenvalues[i+1])
+
+    return descriptor
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Compute eigenvalues of an image')

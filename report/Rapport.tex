@@ -204,7 +204,7 @@ Nous avons utilisé soit des descripteurs de type 1 ($\lambda_1/\lambda_2, \lamb
 
 Etant donné un descripteur (de taille fixée) et une distance, nous avons séparé les 1050 images en deux catégories : un train set (composé d'environ 80\% des images) et un test set (constitué des images restantes). Pour chaque image du test set nous avons recherché l'image du train set qui minimise la distance utilisée. L'algorithme de classification réussit si les deux images appartiennent à la même catégorie.
 
-Nous avons répété 20 fois l'expérience précédente (parallélisée sur 4 coeurs) afin d'obtenir des écarts types inférieurs à 0.03. Les pourcentages de réussites sont regroupés figure \ref{d1} pour le descripteur 1 et figure \ref{d2} pour le descripteur 2.
+Nous avons répété 20 fois l'expérience précédente (parallélisée sur 4 coeurs) afin d'obtenir des écarts types inférieurs à 0.03. Les pourcentages de réussites sont regroupés figure \ref{d1} pour le descripteur 1 et figure \ref{d2} pour le descripteur 2. La figure \ref{d3} illustre les performances lorsque le descripteur est composé en partie du type 1 et du type 2 (par exemple l'abscisse 30/10 correspond à un descripteur de taille 40 dont les 30 premières composantes sont de type 1 et les 10 dernières de type 2). Nous avons utilisé uniquement la métrique cosine pour ce dernier test.
 
 \begin{figure}[H]
   \includegraphics[scale=1.15]{../plot/courbe1.pdf}
@@ -218,13 +218,19 @@ Nous avons répété 20 fois l'expérience précédente (parallélisée sur 4 co
 \label{d2}
 \end{figure}
 
+\begin{figure}[H]
+  \includegraphics[scale=1.15]{../plot/courbe3.pdf}
+\caption{Performances des descripteurs  et 2 mélangés, selon la distance utilisée}
+\label{d3}
+\end{figure}
+
 %#############################################################################################################%
 %#############################################################################################################%
 %#############################################################################################################%
 
 \section{Discussion}
 
-Le descripteur de type 1 ($\lambda_1/\lambda_2, \lambda_1/\lambda_3, \lambda_1/\lambda_4, \dots$) se révèle plus efficace. En effet, comme on peut le constater figure \ref{d1}, quelque soit la métrique utilisée il permet de dépasser les 60\% de réussite, alors que le descripteur de type 2 (figure \ref{d2}) ne franchit pas 56\%. 
+Le descripteur de type 1 ($\lambda_1/\lambda_2, \lambda_1/\lambda_3, \lambda_1/\lambda_4, \dots$) se révèle plus efficace. En effet, comme on peut le constater figure \ref{d1}, quelle que soit la métrique utilisée il permet de dépasser les 60\% de réussite, alors que le descripteur de type 2 (figure \ref{d2}) ne franchit pas 56\%. Mélangés les deux descripteurs ne permet pas non plus d'augmenter les performances comme l'illustre la figure \ref{d3}.
 
 Le meilleur score est obtenu avec la métrique cosine pour un descripteur de type 1 de taille 30 (environ 70\% de réussite). Nous utilisons ces caractéristiques dans notre algorithme final.
 
@@ -252,8 +258,6 @@ Nous avons essayé de reconstruire un son à partir des valeurs propres du Lapla
 En pratique, $\alpha = 40$, on ne retient que 3 valeurs propres. Enfin on associe la même puissance à chacune des 3 fréquences calculées.
 
 On peut s'amuser à changer ces différents paramètres pour entendre des sons différents.
-
-
 
 Afin d'entendre le son associé à l'image \texttt{beetle-11.pgm} par exemple, entrer : 
 \begin{center}
