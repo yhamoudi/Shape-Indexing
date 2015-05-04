@@ -64,7 +64,7 @@ Il existe de nombreuses manières de caractériser une image en vue de reconnaî
 
 Nous avons recherché un moyen robuste et plus concis de classifier en 70 catégories le millier d'images du projet. Notre méthode consiste à étudier la propagation d'une onde à l'intérieur d'une image. En effet, cette propagation dépend directement de la forme de l'objet. De la même manière que deux tambours de forme circulaire renvoient des sons proches, deux images de pommes devraient propager les ondes de façon similaires. Par ailleurs, cette méthode semble insensible à de nombreuses perturbations (rotation, translation, dilatation...).
 
-Notre travail s'inspire de \cite{Zuliani04} et \cite{KhabouHR07}. Nous étudierons dans un premier temps quels descripteurs peuvent être construits à partir du problème de la propagation d'une onde dans une image. Nous chercherons également la métrique la plus appropriée pour comparer deux vecteurs descripteurs associés à deux images. La résistance de notre algorithme à différentes perturbations (rotation, bruit...) sera également vérifiée théoriquement et expérimentalement.
+Notre travail s'inspire de \cite{Zuliani04} et \cite{KhabouHR07}. Nous étudierons dans un premier temps quels descripteurs peuvent être construits à partir du problème de la propagation d'une onde dans une image. Nous chercherons également la métrique la plus appropriée pour comparer deux vecteurs descripteurs associés à deux images. Nous vérifierons enfin théoriquement et expérimentalement la résistance de notre algorithme à différentes perturbations (rotation, bruit...).
 
 %#############################################################################################################%
 %#############################################################################################################%
@@ -116,16 +116,16 @@ Si l'on recherche les solutions stationnaires de l'équation précédente, on po
  \label{eigen}
  \end{equation}
 
-$f$ peut être vue comme un vecteur propre de l'opérateur Laplacien et $\frac{w^2}{v^2}$ la valeur propre associée.
+$f$ peut donc être vue comme un vecteur propre de l'opérateur Laplacien et $\frac{w^2}{v^2}$ la valeur propre associée.
 
-Ainsi, les valeurs propres du Laplacien sont corrélées à la forme de la cavité. Nous avons donc essayé d'utiliser ces valeurs pour construire notre descripteur. Par ailleurs, la propagation d'une onde est inchangée lorsque la cavité est translatée, agrandie, ou subit une rotation. Par conséquent, notre descripteur devrait remplir la plupart des contraintes de stabilité que l'on peut souhaiter.
+Ainsi, les valeurs propres du Laplacien sont corrélées à la forme de la cavité. Nous avons donc essayé d'utiliser ces valeurs pour construire notre descripteur. Par ailleurs, la propagation d'une onde est inchangée lorsque la cavité est translatée, agrandie, ou subit une rotation. Par conséquent, notre descripteur devrait remplir la plupart des contraintes de stabilité souhaitées.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
   \subsection{Calcul des valeurs propres du Laplacien d'une image}
 
 Pour calculer les valeurs propres du Laplacien dans le domaine défini par l'image, on "encode" l'image de taille $N = n*n$ dans un vecteur de taille $n^2$.
-On construit ensuite la matrice de l'opérateur Laplacien discrétisé $\Delta^*$ suivant, de taille N*N: 
+On construit ensuite la matrice de l'opérateur Laplacien discrétisé $\Delta^*$, de taille N*N: 
 $$
 \Delta^* =
  \begin{pmatrix}
@@ -136,7 +136,7 @@ $$
  \end{pmatrix}
 $$
 
-avec $$A_n =  
+avec : $$A_n =  
 \begin{pmatrix}
   -4 & 1 & \cdots & 0 \\
   1  & -4 & \ddots &   \vdots \\
@@ -144,7 +144,7 @@ avec $$A_n =
   0 & \cdots  & 1 & -4
  \end{pmatrix}  $$
 
-Puis on multiplie chaque ligne $i+Nj$, $i \in \{1, ..., n\}, j \in \{1, ..., n\}$ de $\Delta^*$ par 0 ou 1, suivant la valeur du pixel $M(i,j)$. On obtient alors une nouvelle matrice $\Delta^*_M$, toujours de taille $N*N$, qui vérifie pour tout vecteur $E$ de taille $N$ : 
+Ensuite, on multiplie chaque ligne $i+Nj$ ($i, j \in \{1, ..., n\}$) de $\Delta^*$ par 0 ou 1, suivant la valeur du pixel $M(i,j)$. On obtient alors une nouvelle matrice $\Delta^*_M$, toujours de taille $N*N$, qui vérifie pour tout vecteur $E$ de taille $N$ : 
 
 \[ (\Delta^*_M E)(x,y) = \left\{ 
   \begin{array}{l l}
@@ -171,8 +171,7 @@ Puis on multiplie chaque ligne $i+Nj$, $i \in \{1, ..., n\}, j \in \{1, ..., n\}
 
   \subsection{Calcul du descripteur associé aux valeurs propres}
 
-
-A partir du spectre trié par ordre croissant $\{\lambda_0, \lambda_1, ...\}$ calculé précédemment, on construit de manière similaire à \cite{Zuliani04} et \cite{KhabouHR07} deux familles de descripteurs : 
+Nous construisons deux types de descripteurs à partir du spectre trié par ordre croissant $\{\lambda_0, \lambda_1, ...\}$ calculé précédemment. Ces descripteurs (présentés dans \cite{Zuliani04} et \cite{KhabouHR07}) ont été choisis pour leur invariance à différentes perturbations (rotation, translation, ...).
 \begin{itemize}
 \item Descripteur de type 1 : $\{\frac{\lambda_0}{\lambda_1}, \frac{\lambda_0}{\lambda_2}, \frac{\lambda_0}{\lambda_3}, ... \}$
 \item Descripteur de type 2 $\{\frac{\lambda_0}{\lambda_1}, \frac{\lambda_1}{\lambda_2}, \frac{\lambda_2}{\lambda_3},...\}$
