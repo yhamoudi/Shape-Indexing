@@ -13,8 +13,8 @@ Nos outils sont développés en python 3. Ils requièrent l'installation des pac
 
 Notre programme nécessite également une base de données de valeurs propres `eigenvalues.db` située dans le dossier `eigenvalues`. Il y a 3 possibilités pour récupérer cette base : 
   - la reconstruire grâce à la commande : `python3 src/eigenvalues.py database --output eigenvalues/eigenvalues.db --ncpus 4` (remplacer 4 par le nombre de coeurs disponibles). Cette opération prend plus d'une heure
-  - télécharger la base de donnée et l'ajouter manuellement : .............
-  - télécharger le dépôt GitHub (qui intègre la base de données)
+  - télécharger la base de donnée et l'ajouter manuellement : https://filesender.ens-lyon.fr/?vid=6feca009-e562-49c8-fbbb-000078889ff9
+  - télécharger le dépôt GitHub (qui intègre la base de données) : https://github.com/yhamoudi/Shape-Indexing
 
 ### Utilisations des scripts
 
