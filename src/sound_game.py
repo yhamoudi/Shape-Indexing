@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 
 from sound import *
+import random
+import time
 
 # A small game using sound.py
 

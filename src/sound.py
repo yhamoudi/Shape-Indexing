@@ -7,10 +7,7 @@ from pyaudio import PyAudio
 import eigenvalues
 from image import Image
 import numpy as np
-import os.path
 import pickle
-import random
-import time
 
 # Using http://stackoverflow.com/questions/974071/python-library-for-playing-fixed-frequency-sound
 def sine_tone(frequencies, amplitudes, duration, volume=1.0, sample_rate=22050):

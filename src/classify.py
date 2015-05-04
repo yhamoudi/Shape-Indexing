@@ -20,9 +20,6 @@ if __name__ == "__main__":
     im.normalize(50)
     im_eigenvalues = compute_eigenvalues(im.image)
 
-    #print(im_eigenvalues[0:5])
-    #print(eigenvalues['Bone-1.pgm'][0:5])
-
     im_descriptor = compute_descriptor(im_eigenvalues)
 
     data_set = database.DataSet(1.0, classes)
@@ -39,8 +36,6 @@ if __name__ == "__main__":
     classifier = database.DistanceClassifier(train_set)
 
     probability_vector = classifier.probabilistic_classification(vector_to_classify)
-
-    #print(probability_vector.sum())
 
     classes_name = {}
     for name in data_set.classes:
