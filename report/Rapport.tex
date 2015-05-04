@@ -73,23 +73,41 @@ On dispose pour cela d'une dizaine d'images "d'entraînement" par catégories (l
 
 A partir de ces images d'entrainement on doit pouvoir classifier une image inconnue dans l'une des catégories.
 
-Au vu de la taille relativement restreinte du \textit{training set}, on décide d'encoder l'image en un vecteur de réels (le \textit{descripteur} associé à l'image), et d'utiliser 
-une distance entre deux descripteurs pour classifier une image inconnue.
+Au vu de la taille relativement restreinte du \textit{training set}, on décide d'encoder l'image en un vecteur de réels (le \textit{descripteur} associé à l'image), et d'utiliser une distance entre deux descripteurs pour classifier une image inconnue.
 
-Ainsi, pour une image inconnue $M$, on calcule le descripteur associé $d_M$, puis on cherche l'image la plus proche dans le \textit{training set} : $$M' = argmin_{M' \in \mathcal{T}}{d(d_M, d_{M'})}_,   $$ $d$ étant la distance entre descripteurs choisie.
+Ainsi, pour une image inconnue $M$, on calcule le descripteur associé $d_M$, puis on cherche l'image la plus proche dans le \textit{training set} : $M' = argmin_{M' \in \mathcal{T}}{d(d_M, d_{M'})}$, $d$ étant la distance entre descripteurs choisie. On prédit alors la classe de $M$ comme étant celle de $M'$.
 
-On prédit alors la classe de $M$ comme étant celle de $M'$.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+\subsection{Normalisation des images}
 
-\subsection{Descripteur associé à l'image}
+Avant de calculer les valeurs propres associées à une image, on applique à cette dernière quelques opérations de normalisations.
+
+Tout d'abord, on recadre l'image jusqu'à ce que chaque bord contienne au moins un pixel blanc.
+
+Ensuite, on redimensionne l'image de sorte que le maximum de la largeur et de la hauteur soit de 50 pixels. Cette opérations permet de se ramener à des images de taille au plus $N = 50*50 = 2500$. En effet, comme décrit précédemment, on doit calculer les valeurs propres d'une matrice de taille $N*N$. Cette opération étant relativement coûteuse en temps de calcul, nous avons cherché le redimensionnement optimal qui garantisse un temps de calcul raisonnable (environ 30s pour $N = 2500$).
+
+Enfin on rajoute un cadre noir autour de l'image. Ceci permet de fermer la cavité définie par le motif de l'image.
+
+Exemple:
+
+\begin{center}
+  \begin{tabular}{c c c}
+     \includegraphics[scale=0.25]{pictures/apple.png} & \includegraphics[scale=0.25]{pictures/apple-crop.png} & \includegraphics[scale=0.25]{pictures/apple-normalize.png} \\
+    Image initiale & Bords rognés & Image après redimensionnement  \\
+                          &                        &  et ajout du cadre noir
+      \end{tabular}
+\end{center}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+  \subsection{Onde associée à un domaine}
 
 La partie principale du projet consiste donc à calculer un descripteur associé à chaque image. Ce vecteur de réels doit dépendre de la forme de l'image. Idéalement, deux images ayant des formes similaires doivent donner deux descripteurs similaires.
 
 Dans la mesure du possible, il doit être également invariant par translation, par rotation et par dilatation : translater une image, la tourner, l'agrandir ou la rétrécir ne change pas la catégorie de l'image, et donc ne devrait pas changer le descripteur. On aimerait également avoir une robustesse au bruit.
 
 On choisit ici d'utiliser un descripteur inspiré par la physique qui respecte ces différentes contraintes.
-
-\subsection*{Onde associée à un domaine}
 
 En physique, il est bien connu qu'une onde stationnaire se propageant dans une cavité ne peut se propager seulement en certaines fréquences discrètes qui dépendent de la forme de la cavité.
 On se propose de construire un descripteur basé sur ces fréquences. On comprends bien qu'il sera facile de garantir l'invariance par rotation et translation : tourner ou bouger la cavité ne change pas les fréquences qui peuvent se propager dans ladite cavité !
@@ -108,9 +126,9 @@ Si l'on recherche les solutions stationnaires, on pose $E = f(x,y)e^{iwt}$, et o
 
 Ainsi, on peut voir $f$ comme un vecteur propre de l'opérateur Laplacien et $\frac{w^2}{v^2}$ la valeur propre associée.
 
-\subsection*{Calcul du descripteur}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\subsubsection*{Calcul des valeurs propres du Laplacien d'une image}
+  \subsection{Calcul des valeurs propres du Laplacien d'une image}
 
 Pour calculer effectivement les valeurs propres du Laplacien dans le domaine définit par l'image, on "encode" l'image de taille $N = n*n$ dans un vecteur de taille $n^2$.
 On construit alors la matrice de l'opérateur Laplacien discrétisé $\Delta^*$ suivant, de taille N*N: 
@@ -155,8 +173,9 @@ Puis on multiplie chaque ligne $i+Nj$, $i \in \{1, ..., n\}, j \in \{1, ..., n\}
   
   On est donc ramené à calculer les valeurs propres d'une matrice creuse. On utilise la fonction \texttt{numpy.linalg.eigvals} pour trouver effectivement les valeurs propres recherchées.
   
-  
-  \subsubsection*{Calcul du descripteur associé aux valeurs propres}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+  \subsection{Calcul du descripteur associé aux valeurs propres}
 
 
 A partir du spectre trié par ordre croissant $\{\lambda_0, \lambda_1, ...\}$ calculé précédemment, on construit de manière similaire à \cite{Zuliani04} et \cite{KhabouHR07} deux familles de descripteurs : 
@@ -167,28 +186,8 @@ A partir du spectre trié par ordre croissant $\{\lambda_0, \lambda_1, ...\}$ ca
 
 Le choix du descripteur et sa taille (ainsi que la métrique à utiliser pour comparer les descripteurs) seront discutés dans la partie suivante, à partir de résultats expérimentaux.
 
-\subsection{Normalisation des images}
-
-Avant de calculer les valeurs propres associées à une image, on applique à cette dernière quelques opérations de normalisations.
-
-Tout d'abord, on recadre l'image jusqu'à ce que chaque bord contienne au moins un pixel blanc.
-
-Ensuite, on redimensionne l'image de sorte que le maximum de la largeur et de la hauteur soit de 50 pixels. Cette opérations permet de se ramener à des images de taille au plus $N = 50*50 = 2500$. En effet, comme décrit précédemment, on doit calculer les valeurs propres d'une matrice de taille $N*N$. Cette opération étant relativement coûteuse en temps de calcul, nous avons cherché le redimensionnement optimal qui garantisse un temps de calcul raisonnable (environ 30s pour $N = 2500$).
-
-Enfin on rajoute un cadre noir autour de l'image. Ceci permet de fermer la cavité définie par le motif de l'image.
-
-Exemple:
-
-\begin{center}
-  \begin{tabular}{c c c}
-     \includegraphics[scale=0.25]{pictures/apple.png} & \includegraphics[scale=0.25]{pictures/apple-crop.png} & \includegraphics[scale=0.25]{pictures/apple-normalize.png} \\
-    Image initiale & Bords rognés & Image après redimensionnement  \\
-                          &                        &  et ajout du cadre noir
-      \end{tabular}
-\end{center}
 
 
-% mettre des exemples d'images après normalisation
 
 %#############################################################################################################%
 %#############################################################################################################%
