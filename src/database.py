@@ -7,8 +7,6 @@ import numpy as np
 import random
 import scipy.spatial.distance
 from multiprocessing import Pool
-from sklearn.lda import LDA
-from sklearn.externals import joblib
 
 
 class DataSet:
@@ -42,45 +40,6 @@ class DataSet:
 
     def normalize_vector(self, vector):
         return (vector - self.mean) / self.std
-
-
-class LinearDiscriminantAnalysis(object):
-    def __init__(self, input_matrix, labels):
-        self.x = input_matrix
-        self.y = labels
-        self.clf = LDA()
-
-    def train(self):
-        self.clf.fit(self.x, self.y)
-
-    def predict(self, x):
-        return self.clf.predict(x)
-
-    def save_model(self, file):
-        joblib.dump(self.clf, file)
-
-
-class LinearClassifier:
-    def __init__(self, train_set):
-        descriptor_size = train_set.shape[1]-1
-        input_matrix = train_set[:, 0:descriptor_size-1]
-        labels = train_set[:, descriptor_size].astype(int)
-        self.classifier = LinearDiscriminantAnalysis(input_matrix=input_matrix,
-                                                       labels=labels)
-
-    def train(self):
-        self.classifier.train()
-
-    def evaluation(self, test_set):
-        descriptor_size = test_set.shape[1]-1
-        input_matrix = test_set[:, 0:descriptor_size-1]
-        labels = test_set[:, descriptor_size].astype(int)
-        estimated_answers = self.classifier.predict(input_matrix)
-
-        correct_answers = np.sum(estimated_answers == labels)
-        ratio_correct_answers = float(correct_answers)/float(labels.shape[0])
-
-        return ratio_correct_answers
 
 
 class DistanceClassifier:
