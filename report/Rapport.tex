@@ -98,7 +98,14 @@ On se propose de construire un descripteur basé sur ces fréquences. On compren
 Une onde dans une cavité vérifie l'équation suivante : $$\Delta E + \frac{1}{v^2} \frac{\partial^2 E}{\partial t^2} = 0$$ avec par exemple : $E(x,y,t)$ nulle sur les bords de la cavité (condition aux limites de Dirichlet).
 
 Si l'on recherche les solutions stationnaires, on pose $E = f(x,y)e^{iwt}$, et on obtient : 
-$$ \Delta f  - \frac{w^2}{v^2} f  = 0 _, $$$f$ s'annulant sur les bords de la cavité.
+\begin{equation}
+\left\{ 
+  \begin{array}{l}
+ \Delta f  - \frac{w^2}{v^2} \\
+ f  \text{ s'annulant sur les bords de la cavité.} 
+   \end{array} \right.
+ \label{eigen}
+ \end{equation}
 
 Ainsi, on peut voir $f$ comme un vecteur propre de l'opérateur Laplacian et $\frac{w^2}{v^2}$ la valeur propre associée.
 
@@ -130,7 +137,7 @@ Puis on multiplie chaque ligne $i+Nj$, $i \in \{1, ..., n\}, j \in \{1, ..., n\}
 
 \[ (\Delta^*_M E)(x,y) = \left\{ 
   \begin{array}{l l}
-    (\Delta^* E)(x,y) & \quad \text{lorsque }$(x,y)$ \text{ est dans le domaine définit par l'image}\\
+    (\Delta^* E)(x,y) & \quad \text{lorsque }(x,y) \text{ est dans le domaine définit par l'image}\\
     0 & \quad \text{sinon}
   \end{array} \right.\]
   
@@ -139,11 +146,11 @@ Puis on multiplie chaque ligne $i+Nj$, $i \in \{1, ..., n\}, j \in \{1, ..., n\}
   
   \[ (\Delta^*_M E)(x,y) = \left\{ 
   \begin{array}{l l}
-    \lambda E(x,y) & \quad \text{lorsque }$(x,y)$ \text{ est dans le domaine définit par l'image}\\
+    \lambda E(x,y) & \quad \text{lorsque }(x,y) \text{ est dans le domaine définit par l'image}\\
     0 & \quad \text{sinon}
   \end{array} \right.\]
   
- Donc $E$ est bien une solution de l'équation discrétisé (1) : $E$ correspond à une onde stationnaire associée à la valeur propre $\lambda$ pour le domaine définit par l'image.
+ Donc $E$ est bien une solution de l'équation discrétisé \eqref{eigen} : $E$ correspond à une onde stationnaire associée à la valeur propre $\lambda$ pour le domaine définit par l'image.
   
   On peut généraliser sans problème tout cela pour des images rectangulaires de taille $N = h*w$.
   
