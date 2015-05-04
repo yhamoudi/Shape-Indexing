@@ -1,6 +1,8 @@
 # Shape-Indexing
 A binary shape indexing/retrieval system
 
+### Installation
+
 Nos outils sont développés en python 3. Ils requièrent l'installation des packages suivants (pip3 install nom_du_package --user) : 
   - numpy
   - matplotlib
@@ -8,6 +10,11 @@ Nos outils sont développés en python 3. Ils requièrent l'installation des pac
   - scipy
   - PyAudio
   - scikit-learn
+
+Notre programme nécessite également une base de données de valeurs propres `eigenvalues.db` située dans le dossier `eigenvalues`. Il y a 3 possibilités pour récupérer cette base : 
+  - la reconstruire grâce à la commande : `python3 src/eigenvalues.py database --output eigenvalues/eigenvalues.db --ncpus 4` (remplacer 4 par le nombre de coeurs disponibles). Cette opération prend plus d'une heure
+  - télécharger la base de donnée et l'ajouter manuellement : .............
+  - télécharger le dépôt GitHub (qui intègre la base de données)
 
 ### Utilisations des scripts
 
@@ -36,8 +43,9 @@ Essayer le mini-jeu de reconnaissance des sons :
  - `image.py` : contient la classe Image et l'ensemble des outils permettant de manipuler les images (charger une image au format PGM, appliquer une  rotation, ajouter du bruit...)
  - `eigenvalues.py` : permet de calculer les valeurs propres d'un ensemble d'images : 
     * `compute_eigenvalues` prend en entrée une image au format numpy array et renvoie la liste de ses valeurs propres
-    * `python3 eigenvalues.py database --output save.db -- ncpus 4` calcule sur 4 coeurs en parallèle les valeurs propres de chaque image contenue dans le dossier `database` et stocke le résultat final (une map qui associe au nom de chaque image ses valeurs propres) dans `save.db`
- - `database.py` : .......................
+    * `python3 src/eigenvalues.py database --output save.db --ncpus 4` calcule sur 4 coeurs en parallèle les valeurs propres de chaque image contenue dans le dossier `database` et stocke le résultat final (une map qui associe au nom de chaque image ses valeurs propres) dans `save.db`
+ - `database.py` : permet d'évaluer les performances de l'algorithme
+    * `python3 src/database.py eigenvalues/eigenvalues.db --classes classes.csv --niters 20` : répartit les images en un train set (environ 80% des images) et un test set (images restantes). Calcule pour chaque image du test set l'image du train set la plus proche. Cette expérience est répété 20 fois, et renvoie la moyenne du nombre de réussites (images correctement classifiées) et la variance.
  - `distance.py` : utilisé pour calculer la distance entre 2 images (`distance.sh`) : 
     * calculer les valeurs propres puis le descripteur de chaque image 
     * renvoyer la distance entre les 2 descripteurs (la métrique par défaut est cosine)

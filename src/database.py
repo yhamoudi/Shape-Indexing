@@ -168,7 +168,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     classes = load_classes(args.classes)
-    print(classes)
+    #print(classes)
 
     eigenvalues = pickle.load(open(args.eigenvalues, "rb"))
 
@@ -191,6 +191,8 @@ if __name__ == "__main__":
     pool = Pool(4)
     m_test = pool.map(f, [0]*args.niters)
 
-    print(m_test)
+    #print(m_test)
+    print("Mean : ")
     print(np.array(m_test, dtype=float).mean())
+    print("Standard deviation : ")
     print(np.array(m_test, dtype=float).std())

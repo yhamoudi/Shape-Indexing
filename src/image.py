@@ -8,7 +8,7 @@ import random
 
 class Image:
     def __init__(self, filename):
-        f = open(filename, 'rb')
+        f = open(filename, 'rb') # load an image in pgm format
         line = f.readline().decode()
         while not line[0].isdigit():
             line = f.readline().decode()
