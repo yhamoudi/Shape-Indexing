@@ -68,23 +68,22 @@ Notre travail s'inspire de \cite{Zuliani04} et \cite{KhabouHR07}. Nous étudiero
 
 \section{Méthode}
 
-L'objectif est de classifier un certain nombre d'images noir et blancs en une catégorie parmi 70 possibles.
-On dispose pour cela d'une dizaine d'images "d'entraînement" par catégories (le \textit{training set}, noté $T$).
+L'objectif est de classifier un certain nombre d'images noir et blanc en une catégorie parmi 70 possibles.
+On dispose pour cela d'une dizaine d'images "d'entraînement" par catégories (le \textit{training set}, noté $\mathcal{T}$).
 
-A partir de ces images d'entrainement on doit pouvoir classifier une image inconnue dans l'une des 70 catégories.
+A partir de ces images d'entrainement on doit pouvoir classifier une image inconnue dans l'une de ces 70 catégories.
 
 Au vu de la taille relativement restreinte du \textit{training set}, on décide d'encoder l'image en un vecteur de réels (le \textit{descripteur} associé à l'image), et d'utiliser 
 une distance entre deux descripteurs pour classifier une image inconnue.
 
-Ainsi, pour une image inconnue $M$, on calcule le descripteur associé $d_M$, puis on cherche l'image la plus proche dans le \textit{training set} : $$M' = argmin_{M' \in T}{d(d_M, d_{M'})}_,   $$ $d$ étant la distance entre descripteurs choisie.
+Ainsi, pour une image inconnue $M$, on calcule le descripteur associé $d_M$, puis on cherche l'image la plus proche dans le \textit{training set} : $$M' = argmin_{M' \in \mathcal{T}}{d(d_M, d_{M'})}_,   $$ $d$ étant la distance entre descripteurs choisie.
 
 On prédit alors la classe de $M$ comme étant celle de $M'$
 
 
 \subsection{Descripteur associé à l'image}
 
-La partie principale du projet consiste donc à calculer le descripteur associé à chaque image. Ce vecteur de réels doit dépendre de la forme de l'image.
-Idéalement, deux images ayant des formes similaires doivent donner deux descripteurs similaires.
+La partie principale du projet consiste donc à calculer un descripteur associé à chaque image. Ce vecteur de réels doit dépendre de la forme de l'image. Idéalement, deux images ayant des formes similaires doivent donner deux descripteurs similaires.
 
 Dans la mesure du possible, il doit être également invariant par translation, par rotation et par dilatation : translater une image, la tourner, l'agrandir ou la rétrécir ne change pas la catégorie de l'image, et donc ne devrait pas changer le descripteur.
 On aimerait également une robustesse au bruit : un léger bruit ne doit modifier que très légèrement le descripteur.
@@ -127,16 +126,24 @@ avec $$A_n =
   0 & \cdots  & 1 & -4
  \end{pmatrix}  $$
 
-Puis on multiplie chaque ligne $i+Nj$, $i \in \{1, ..., n\}, j \in \{1, ..., n\}$ de $\Delta^*$ par 0 ou 1, suivant la valeur du pixel $M(i,j)$.
+Puis on multiplie chaque ligne $i+Nj$, $i \in \{1, ..., n\}, j \in \{1, ..., n\}$ de $\Delta^*$ par 0 ou 1, suivant la valeur du pixel $M(i,j)$. On obtient alors une nouvelle matrice $\Delta^*_M$, toujours de taille $N*N$, qui vérifie pour tout vecteur $E$ de taille $N$ : 
 
-On a alors pour E vector propre de la matrice  $\Delta^*$ : 
-\[ \Delta^* E = \left\{ 
+\[ (\Delta^*_M E)(x,y) = \left\{ 
   \begin{array}{l l}
-    \lambda E & \quad \text{lorsque l'on est dans le domaine définit par l'image}\\
+    (\Delta^* E)(x,y) & \quad \text{lorsque }$(x,y)$ \text{ est dans le domaine définit par l'image}\\
     0 & \quad \text{sinon}
   \end{array} \right.\]
   
-  $E$ est un vecteur propre de taille $n*n$  de $\Delta^*$ qui correspond à une onde stationnaire associée à la valeur propre $\lambda$ pour le domaine définit par l'image.
+  
+  Ainsi, si $E$ vecteur de taille $N$ est un vecteur propre de $\Delta^*_M$ associé à la valeur propre $\lambda$, on a : 
+  
+  \[ (\Delta^*_M E)(x,y) = \left\{ 
+  \begin{array}{l l}
+    \lambda E(x,y) & \quad \text{lorsque }$(x,y)$ \text{ est dans le domaine définit par l'image}\\
+    0 & \quad \text{sinon}
+  \end{array} \right.\]
+  
+ Donc $E$ est bien une solution de l'équation discrétisé (1) : $E$ correspond à une onde stationnaire associée à la valeur propre $\lambda$ pour le domaine définit par l'image.
   
   On peut généraliser sans problème tout cela pour des images rectangulaires de taille $N = h*w$.
   
@@ -152,19 +159,22 @@ A partir du spectre trié par ordre croissant $\{\lambda_0, \lambda_1, ...\}$ ca
 \item $\{\frac{\lambda_0}{\lambda_1}, \frac{\lambda_1}{\lambda_2}, \frac{\lambda_2}{\lambda_3},...\}$
 \end{itemize}
 
-On discutera du choix du descripteur final à partir de tests numériques détailles dans la second partie.
+On discutera du choix du descripteur final à partir de tests numériques détaillés dans la seconde partie.
   
 \subsection{Normalisation des images}
 
-Etant donné une image en entrée, on commence par rogner les bords jusqu'à que chaque bords de l'image contienne au moins un pixel blanc.
+Etant donné une image en entrée, on commence par rogner les bords jusqu'à ce que chaque bord de l'image contienne au moins un pixel blanc. Ceci permet de réduire la taille de l'image en enlevant les bords inutiles.
+Puis dans un second temps, on redimensionne l'image de façon à ce que le maximum de la largeur et de la hauteur de l'image soit de 50 pixels.
+Cette opérations permet de se ramener à des images de taille au plus $N = 50*50 = 2500$. En effet, on sera ensuite amené à calculer les valeurs propres d'une matrice de taille $N*N$, opération relativement couteuse en temps de calcul.
+Enfin on rajoute un cadre noir autour de l'image : cette opération permet de fermer la cavité définie par le motif de l'image.
 
 Example:
 
 \begin{center}
   \begin{tabular}{c c c}
      \includegraphics[scale=0.25]{pictures/apple.png} & \includegraphics[scale=0.25]{pictures/apple-crop.png} & \includegraphics[scale=0.25]{pictures/apple-normalize.png} \\
-    Image initiale & Bords rognés & Image redimensionnée  \\
-                          &                        &  et ajout des bords noirs
+    Image initiale & Bords rognés & Image après redimensionnement  \\
+                          &                        &  et ajout du cadre noir
       \end{tabular}
 \end{center}
 

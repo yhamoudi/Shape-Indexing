@@ -48,7 +48,7 @@ Essayer le mini-jeu de reconnaissance des sons :
     * `python3 src/database.py eigenvalues/eigenvalues.db --classes classes.csv --niters 20` : répartit les images en un train set (environ 80% des images) et un test set (images restantes). Calcule pour chaque image du test set l'image du train set la plus proche. Cette expérience est répété 20 fois, et renvoie la moyenne du nombre de réussites (images correctement classifiées) et la variance.
  - `similarity.py` : utilisé pour calculer la similarité entre 2 images (`similarity.sh`) : 
     * calculer les valeurs propres puis le descripteur de chaque image 
-    * renvoyer la similarité entre les 2 descripteurs (par défaut : (1 - cosine)/2)
+    * renvoyer la similarité entre les 2 descripteurs (par défaut : 1 - cosine/2)
  - `classify.py` : utilisé pour classer une image dans une des 70 catégories (`classify.sh`)
     * calculer les valeurs propres puis le descripteur de l'image 
     * calculer pour chaque image de la base de donnée la distance de son descripteur à celui de l'image précédente
