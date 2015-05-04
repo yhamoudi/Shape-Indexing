@@ -16,6 +16,8 @@ Notre programme nécessite également une base de données de valeurs propres `e
   - télécharger la base de donnée et l'ajouter manuellement : https://filesender.ens-lyon.fr/?vid=6feca009-e562-49c8-fbbb-000078889ff9
   - télécharger le dépôt GitHub (qui intègre la base de données) : https://github.com/yhamoudi/Shape-Indexing
 
+Il est également conseillé d'ajouter les images (au format pgm) dans le dossier database.
+
 ### Utilisations des scripts
 
 Calculer la similarité (0 : peu similaires, 1 : très similaires) entre 2 images (cette opération prend jusqu'à 30s) :
