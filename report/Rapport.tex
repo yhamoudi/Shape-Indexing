@@ -173,9 +173,9 @@ Avant de calculer les valeurs propres associées à une image, on applique à ce
 
 Tout d'abord, on recadre l'image jusqu'à ce que chaque bord contienne au moins un pixel blanc.
 
-Ensuite, on redimensionne l'image de sorte que le maximum de la largeur et de la hauteur soit de 50 pixels. Cette opérations permet de se ramener à des images de taille au plus $N = 50*50 = 2500$. En effet, on est emmené par la suite à calculer les valeurs propres d'une matrice de taille $N*N$, cette opération est relativement coûteuse en temps de calcul (environ 30s pour $N = 2500$).
+Ensuite, on redimensionne l'image de sorte que le maximum de la largeur et de la hauteur soit de 50 pixels. Cette opérations permet de se ramener à des images de taille au plus $N = 50*50 = 2500$. En effet, comme décrit précédemment, on doit calculer les valeurs propres d'une matrice de taille $N*N$. Cette opération étant relativement coûteuse en temps de calcul, nous avons cherché le redimensionnement optimal qui garantisse un temps de calcul raisonnable (environ 30s pour $N = 2500$).
 
-Enfin on rajoute un cadre noir autour de l'image, ceci permet de fermer la cavité définie par le motif de l'image.
+Enfin on rajoute un cadre noir autour de l'image. Ceci permet de fermer la cavité définie par le motif de l'image.
 
 Exemple:
 
