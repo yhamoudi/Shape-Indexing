@@ -68,25 +68,24 @@ Notre travail s'inspire de \cite{Zuliani04} et \cite{KhabouHR07}. Nous étudiero
 
 \section{Méthode}
 
-L'objectif est de classifier un certain nombre d'images noir et blanc en une catégorie parmi 70 possibles.
+L'objectif est de classifier plusieurs images en noir et blanc dans une catégorie parmi 70 possibles.
 On dispose pour cela d'une dizaine d'images "d'entraînement" par catégories (le \textit{training set}, noté $\mathcal{T}$).
 
-A partir de ces images d'entrainement on doit pouvoir classifier une image inconnue dans l'une de ces 70 catégories.
+A partir de ces images d'entrainement on doit pouvoir classifier une image inconnue dans l'une des catégories.
 
 Au vu de la taille relativement restreinte du \textit{training set}, on décide d'encoder l'image en un vecteur de réels (le \textit{descripteur} associé à l'image), et d'utiliser 
 une distance entre deux descripteurs pour classifier une image inconnue.
 
 Ainsi, pour une image inconnue $M$, on calcule le descripteur associé $d_M$, puis on cherche l'image la plus proche dans le \textit{training set} : $$M' = argmin_{M' \in \mathcal{T}}{d(d_M, d_{M'})}_,   $$ $d$ étant la distance entre descripteurs choisie.
 
-On prédit alors la classe de $M$ comme étant celle de $M'$
+On prédit alors la classe de $M$ comme étant celle de $M'$.
 
 
 \subsection{Descripteur associé à l'image}
 
 La partie principale du projet consiste donc à calculer un descripteur associé à chaque image. Ce vecteur de réels doit dépendre de la forme de l'image. Idéalement, deux images ayant des formes similaires doivent donner deux descripteurs similaires.
 
-Dans la mesure du possible, il doit être également invariant par translation, par rotation et par dilatation : translater une image, la tourner, l'agrandir ou la rétrécir ne change pas la catégorie de l'image, et donc ne devrait pas changer le descripteur.
-On aimerait également une robustesse au bruit : un léger bruit ne doit modifier que très légèrement le descripteur.
+Dans la mesure du possible, il doit être également invariant par translation, par rotation et par dilatation : translater une image, la tourner, l'agrandir ou la rétrécir ne change pas la catégorie de l'image, et donc ne devrait pas changer le descripteur. On aimerait également avoir une robustesse au bruit.
 
 On choisit ici d'utiliser un descripteur inspiré par la physique qui respecte ces différentes contraintes.
 
@@ -98,7 +97,14 @@ On se propose de construire un descripteur basé sur ces fréquences. On compren
 Une onde dans une cavité vérifie l'équation suivante : $$\Delta E + \frac{1}{v^2} \frac{\partial^2 E}{\partial t^2} = 0$$ avec par exemple : $E(x,y,t)$ nulle sur les bords de la cavité (condition aux limites de Dirichlet).
 
 Si l'on recherche les solutions stationnaires, on pose $E = f(x,y)e^{iwt}$, et on obtient : 
-$$ \Delta f  - \frac{w^2}{v^2} f  = 0 _, $$$f$ s'annulant sur les bords de la cavité.
+\begin{equation}
+\left\{ 
+  \begin{array}{l}
+ \Delta f  - \frac{w^2}{v^2} \\
+ f  \text{ s'annulant sur les bords de la cavité.} 
+   \end{array} \right.
+ \label{eigen}
+ \end{equation}
 
 Ainsi, on peut voir $f$ comme un vecteur propre de l'opérateur Laplacian et $\frac{w^2}{v^2}$ la valeur propre associée.
 
@@ -130,7 +136,7 @@ Puis on multiplie chaque ligne $i+Nj$, $i \in \{1, ..., n\}, j \in \{1, ..., n\}
 
 \[ (\Delta^*_M E)(x,y) = \left\{ 
   \begin{array}{l l}
-    (\Delta^* E)(x,y) & \quad \text{lorsque }$(x,y)$ \text{ est dans le domaine définit par l'image}\\
+    (\Delta^* E)(x,y) & \quad \text{lorsque }(x,y) \text{ est dans le domaine définit par l'image}\\
     0 & \quad \text{sinon}
   \end{array} \right.\]
   
@@ -139,11 +145,11 @@ Puis on multiplie chaque ligne $i+Nj$, $i \in \{1, ..., n\}, j \in \{1, ..., n\}
   
   \[ (\Delta^*_M E)(x,y) = \left\{ 
   \begin{array}{l l}
-    \lambda E(x,y) & \quad \text{lorsque }$(x,y)$ \text{ est dans le domaine définit par l'image}\\
+    \lambda E(x,y) & \quad \text{lorsque }(x,y) \text{ est dans le domaine définit par l'image}\\
     0 & \quad \text{sinon}
   \end{array} \right.\]
   
- Donc $E$ est bien une solution de l'équation discrétisé (1) : $E$ correspond à une onde stationnaire associée à la valeur propre $\lambda$ pour le domaine définit par l'image.
+ Donc $E$ est bien une solution de l'équation discrétisé \eqref{eigen} : $E$ correspond à une onde stationnaire associée à la valeur propre $\lambda$ pour le domaine définit par l'image.
   
   On peut généraliser sans problème tout cela pour des images rectangulaires de taille $N = h*w$.
   
@@ -163,12 +169,15 @@ On discutera du choix du descripteur final à partir de tests numériques détai
   
 \subsection{Normalisation des images}
 
-Etant donné une image en entrée, on commence par rogner les bords jusqu'à ce que chaque bord de l'image contienne au moins un pixel blanc. Ceci permet de réduire la taille de l'image en enlevant les bords inutiles.
-Puis dans un second temps, on redimensionne l'image de façon à ce que le maximum de la largeur et de la hauteur de l'image soit de 50 pixels.
-Cette opérations permet de se ramener à des images de taille au plus $N = 50*50 = 2500$. En effet, on sera ensuite amené à calculer les valeurs propres d'une matrice de taille $N*N$, opération relativement couteuse en temps de calcul.
-Enfin on rajoute un cadre noir autour de l'image : cette opération permet de fermer la cavité définie par le motif de l'image.
+Avant de calculer les valeurs propres associées à une image, on applique à cette dernière quelques opérations de normalisations.
 
-Example:
+Tout d'abord, on recadre l'image jusqu'à ce que chaque bord contienne au moins un pixel blanc.
+
+Ensuite, on redimensionne l'image de sorte que le maximum de la largeur et de la hauteur soit de 50 pixels. Cette opérations permet de se ramener à des images de taille au plus $N = 50*50 = 2500$. En effet, on est emmené par la suite à calculer les valeurs propres d'une matrice de taille $N*N$, cette opération est relativement coûteuse en temps de calcul (environ 30s pour $N = 2500$).
+
+Enfin on rajoute un cadre noir autour de l'image, ceci permet de fermer la cavité définie par le motif de l'image.
+
+Exemple:
 
 \begin{center}
   \begin{tabular}{c c c}
