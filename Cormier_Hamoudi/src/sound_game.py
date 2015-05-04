@@ -3,11 +3,12 @@
 from sound import *
 import random
 import time
+from eigenvalues import arrange_eigenvalues
 
 # A small game using sound.py
 
 def sound_game():
-    eigenvalues = pickle.load(open('eigenvalues/eigenvalues_arranged.db', "rb"))
+    eigenvalues = arrange_eigenvalues(pickle.load(open('eigenvalues/eigenvalues.db', "rb")))
     dif = int(input('Enter the difficulty (2-10): ')) # number of sounds to heard
     category = random.choice(list(eigenvalues.keys())) # a random category
     sample = random.randint(0,len(eigenvalues[category])-1) # a random object in this category
