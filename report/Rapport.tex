@@ -110,10 +110,10 @@ Ainsi, on peut voir $f$ comme un vecteur propre de l'opérateur Laplacien et $\f
 
 \subsection*{Calcul du descripteur}
 
-\subsubsection*{Calcul des valeurs propres du Laplacian d'une image}
+\subsubsection*{Calcul des valeurs propres du Laplacien d'une image}
 
-Pour calculer effectivement les valeurs propres du laplacien dans le domaine définit par l'image, on "encode" l'image de taille $N = n*n$ dans un vecteur de taille $n^2$.
-On construit alors la matrice de l'opérateur Laplacian discrétisé $\Delta^*$ suivant, de taille N*N: 
+Pour calculer effectivement les valeurs propres du Laplacien dans le domaine définit par l'image, on "encode" l'image de taille $N = n*n$ dans un vecteur de taille $n^2$.
+On construit alors la matrice de l'opérateur Laplacien discrétisé $\Delta^*$ suivant, de taille N*N: 
 $$
 \Delta^* =
  \begin{pmatrix}
@@ -151,9 +151,9 @@ Puis on multiplie chaque ligne $i+Nj$, $i \in \{1, ..., n\}, j \in \{1, ..., n\}
   
  Donc $E$ est bien une solution de l'équation discrétisée \eqref{eigen} : $E$ correspond à une onde stationnaire associée à la valeur propre $\lambda$ pour le domaine définit par l'image.
   
-  On peut généraliser sans problème tout cela pour des images rectangulaires de taille $N = h*w$.
+  On peut généraliser facilement cela pour des images rectangulaires de taille $N = h*w$.
   
-  On est donc ramené à calculer les valeurs propres d'une matrice creuse. On utilise la fonction numpy.linalg.eigvals pour trouver effectivement les valeurs propres recherchées.
+  On est donc ramené à calculer les valeurs propres d'une matrice creuse. On utilise la fonction \texttt{numpy.linalg.eigvals} pour trouver effectivement les valeurs propres recherchées.
   
   
   \subsubsection*{Calcul du descripteur associé aux valeurs propres}
@@ -161,12 +161,12 @@ Puis on multiplie chaque ligne $i+Nj$, $i \in \{1, ..., n\}, j \in \{1, ..., n\}
 
 A partir du spectre trié par ordre croissant $\{\lambda_0, \lambda_1, ...\}$ calculé précédemment, on construit de manière similaire à \cite{Zuliani04} et \cite{KhabouHR07} deux familles de descripteurs : 
 \begin{itemize}
-\item $\{\frac{\lambda_0}{\lambda_1}, \frac{\lambda_0}{\lambda_2}, ... \}$
-\item $\{\frac{\lambda_0}{\lambda_1}, \frac{\lambda_1}{\lambda_2}, \frac{\lambda_2}{\lambda_3},...\}$
+\item Descripteur de type 1 : $\{\frac{\lambda_0}{\lambda_1}, \frac{\lambda_0}{\lambda_2}, \frac{\lambda_0}{\lambda_3}, ... \}$
+\item Descripteur de type 2 $\{\frac{\lambda_0}{\lambda_1}, \frac{\lambda_1}{\lambda_2}, \frac{\lambda_2}{\lambda_3},...\}$
 \end{itemize}
 
-On discutera du choix du descripteur final à partir de tests numériques détaillés dans la seconde partie.
-  
+Le choix du descripteur et sa taille (ainsi que la métrique à utiliser pour comparer les descripteurs) seront discutés dans la partie suivante, à partir de résultats expérimentaux.
+
 \subsection{Normalisation des images}
 
 Avant de calculer les valeurs propres associées à une image, on applique à cette dernière quelques opérations de normalisations.
