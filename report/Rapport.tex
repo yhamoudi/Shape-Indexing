@@ -311,11 +311,17 @@ Afin d'améliorer la classification, plusieurs paramètres de l'algorithmes pour
 
 \section{Conclusion}
 
-Reconnaître la forme d'un objet à partir du son qu'il émet est un problème mathématique ancien (voir \cite{kac1966can}). Il a été démontré que deux objets différents pouvaient émettre des sons identiques, la figure \ref{} en est un exemple. Cependant, dans la majorité des cas, le bruit émis est une bonne charactéristique de l'objet.
+Reconnaître la forme d'un objet à partir du son qu'il émet est un problème mathématique ancien (voir \cite{kac1966can}). Bien qu'il existe des objets différents émettant des sons identiques (la figure \ref{drum} en est un exemple), dans la majorité des cas le bruit émis est une bonne caractéristique de l'objet.
 
 Comme on a pu le constater dans ce projet, utiliser la propagation d'une onde (via les valeurs propres du Laplacien de Dirichlet) comme seul descripteur permet d'obtenir un outil de classification atteignant 70\% de réussite. Un des atoûts principaux de cette méthode est sa résistance aux perturbations (rotation, bruit...). Par ailleurs, de nombreuses améliorations semblent possibles pour améliorer les performances (choix d'une meilleur métrique, enrichissement du descripteur avec d'autres caractéristiques de l'image, ...).
 
-
+\begin{figure}[H]
+  \begin{center}
+  \includegraphics[scale=0.5]{drums.png}    
+  \end{center}
+\caption{Deux images renvoyant des sons identiques (source : Wikipédia)}
+\label{drum}
+\end{figure}
 %#############################################################################################################%
 %#############################################################################################################%
 %#############################################################################################################%
