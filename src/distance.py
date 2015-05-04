@@ -12,7 +12,6 @@ def descriptor(file):
     return compute_descriptor(im_eigenvalues)
 
 
-
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Compute the distance between two images')
     parser.add_argument('file1', metavar='F', help='the first image')
@@ -27,5 +26,4 @@ if __name__ == "__main__":
     v2 = r[1]
 
     distance = scipy.spatial.distance.cosine(v1, v2) # cosine distance
-
-    print(distance)
+    print(1.0-distance/2.0)

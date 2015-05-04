@@ -91,9 +91,9 @@ On aimerait également une robustesse au bruit : un léger bruit ne doit que mod
 
 On choisit ici d'utiliser un descripteur inspiré par la physique qui respecte, on le verra, toutes ces contraintes.
 
-\subsection*{Onde associé à un domaine}
+\subsection*{Onde associée à un domaine}
 
-En physique, il est bien connu qu'une onde stationnaire se propageant dans une cavité ne peut se propager seulement qu'en certaines fréquences discrètes qui dépendent de la forme de la cavité.
+En physique, il est bien connu qu'une onde stationnaire se propageant dans une cavité ne peut se propager seulement en certaines fréquences discrètes qui dépendent de la forme de la cavité.
 On se propose de construire un descripteur basé sur ces fréquences. On comprends bien qu'il sera facile de garantir l'invariance par rotation et translation : tourner ou bouger la cavité ne change pas les fréquences qui peuvent se propager dans ladite cavité !
 
 Une onde dans une cavité vérifie l'équation suivante : $$\Delta E + \frac{1}{v^2} \frac{\partial^2 E}{\partial t^2} = 0$$ avec par exemple : $E(x,y,t)$ nulle sur les bords de la cavité (condition aux limites de Dirichlet).
@@ -108,7 +108,7 @@ Ainsi, on peut voir $f$ comme un vecteur propre de l'opérateur Laplacian et $\f
 \subsubsection*{Calcul des valeurs propres du Laplacian d'une image}
 
 Pour calculer effectivement les valeurs propres du laplacien dans le domaine définit par l'image, on "encode" l'image de taille $N = n*n$ dans un vecteur de taille $n^2$.
-On construit alors la matrice de l'opérateur Laplacian discretisé $\Delta^*$ suivant, de taille N*N: 
+On construit alors la matrice de l'opérateur Laplacian discrétisé $\Delta^*$ suivant, de taille N*N: 
 $$
 \Delta^* =
  \begin{pmatrix}
@@ -127,9 +127,9 @@ avec $$A_n =
   0 & \cdots  & 1 & -4
  \end{pmatrix}  $$
 
-Puis mon multiplie chaque ligne $i+Nj$, $i \in \{1, ..., n\}, j \in \{1, ..., n\}$ de $\Delta^*$ par 0 ou 1, suivant la valeur du pixel $M(i,j)$.
+Puis on multiplie chaque ligne $i+Nj$, $i \in \{1, ..., n\}, j \in \{1, ..., n\}$ de $\Delta^*$ par 0 ou 1, suivant la valeur du pixel $M(i,j)$.
 
-En alors : 
+On a alors pour E vector propre de la matrice  $\Delta^*$ : 
 \[ \Delta^* E = \left\{ 
   \begin{array}{l l}
     \lambda E & \quad \text{lorsque l'on est dans le domaine définit par l'image}\\
@@ -155,6 +155,19 @@ A partir du spectre trié par ordre croissant $\{\lambda_0, \lambda_1, ...\}$ ca
 On discutera du choix du descripteur final à partir de tests numériques détailles dans la second partie.
   
 \subsection{Normalisation des images}
+
+Etant donné une image en entrée, on commence par rogner les bords jusqu'à que chaque bords de l'image contienne au moins un pixel blanc.
+
+Example:
+
+\begin{center}
+  \begin{tabular}{c c c}
+     \includegraphics[scale=0.25]{pictures/apple.png} & \includegraphics[scale=0.25]{pictures/apple-crop.png} & \includegraphics[scale=0.25]{pictures/apple-normalize.png} \\
+    Image initiale & Bords rognés & Image redimensionnée  \\
+                          &                        &  et ajout des bords noirs
+      \end{tabular}
+\end{center}
+
 
 % mettre des exemples d'images après normalisation
 
