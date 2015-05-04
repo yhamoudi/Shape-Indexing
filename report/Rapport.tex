@@ -74,7 +74,7 @@ Notre travail s'inspire de \cite{Zuliani04} et \cite{KhabouHR07}. Nous étudiero
 
 On dispose d'un ensemble $\mathcal{E}$ d'images en noir et blanc regroupées en 70 catégories. Les images de chaque catégorie représentent un même objet (par exemple : une pomme, une voiture, un os...). L'objectif est de classer de nouvelles images à l'intérieur d'une des catégories précédentes.
 
-Pour ce faire, nous allons encoder chaque image par un vecteur de réels (le \textit{descripteur}), et utiliser une distance entre descripteurs pour classifier les images inconnues : étant donné une image $M$, nous calculons son descripteur $d_M$ puis nous cherchons l'image $M'$ de $\mathcal{E}$ qui minimise $d(d_M, d_{M'})$ (pour une distance $d$ donnée). On prédit alors la classe de $M$ comme étant celle de $M'$.
+Pour ce faire, nous allons encoder chaque image par un vecteur de réels (le \textit{descripteur}), et utiliser une distance entre descripteurs pour classifier les images inconnues : étant donné une image $M$, nous calculons son descripteur $d_M$ puis nous cherchons l'image $M'$ de $\mathcal{E}$ qui minimise $d(d_M, d_{M'})$ (pour une distance $d$ fixée). On prédit alors la classe de $M$ comme étant celle de $M'$.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -171,16 +171,13 @@ Ensuite, on multiplie chaque ligne $i+Nj$ ($i, j \in \{1, ..., n\}$) de $\Delta^
 
   \subsection{Calcul du descripteur associé aux valeurs propres}
 
-Nous construisons deux types de descripteurs à partir du spectre trié par ordre croissant $\{\lambda_0, \lambda_1, ...\}$ calculé précédemment. Ces descripteurs (présentés dans \cite{Zuliani04} et \cite{KhabouHR07}) ont été choisis pour leur invariance à différentes perturbations (rotation, translation, ...).
+Nous construisons deux types de descripteurs à partir du spectre trié par ordre croissant $\{\lambda_1, \lambda_2, ...\}$ calculé précédemment. Ces descripteurs (présentés dans \cite{Zuliani04} et \cite{KhabouHR07}) ont été choisis pour leur invariance à différentes perturbations (rotation, translation, ...).
 \begin{itemize}
-\item Descripteur de type 1 : $\{\frac{\lambda_0}{\lambda_1}, \frac{\lambda_0}{\lambda_2}, \frac{\lambda_0}{\lambda_3}, ... \}$
-\item Descripteur de type 2 $\{\frac{\lambda_0}{\lambda_1}, \frac{\lambda_1}{\lambda_2}, \frac{\lambda_2}{\lambda_3},...\}$
+\item Descripteur de type 1 : $\{\frac{\lambda_1}{\lambda_2}, \frac{\lambda_1}{\lambda_3}, \frac{\lambda_1}{\lambda_4}, ... \}$
+\item Descripteur de type 2 $\{\frac{\lambda_1}{\lambda_2}, \frac{\lambda_2}{\lambda_3}, \frac{\lambda_3}{\lambda_4},...\}$
 \end{itemize}
 
 Le choix du descripteur et sa taille (ainsi que la métrique à utiliser pour comparer les descripteurs) seront discutés dans la partie suivante, à partir de résultats expérimentaux.
-
-
-
 
 %#############################################################################################################%
 %#############################################################################################################%
@@ -197,7 +194,7 @@ Nous exposons les résultats obtenus grâce à la méthode détaillée précéde
 Les valeurs propres du Laplacien de Dirichlet vérifient un certain nombre de propriétés mathématiques qui garantissent que notre descripteur est insensible au redimensionnement, à la rotation et à la translation. Nous vérifions expérimentalement ces propriétés ci-dessous.
 
 ~\\
-\underline{Redimensionnement} Etant donné un domaine $\Omega$ et un facteur $a > 0$, on a $\lambda_k(a \Omega) = \frac{\lambda_k(\Omega)}{a^2}$ (voir \cite{KhabouHR07}). Or, notre descripteur utilise des rapports de valeurs propres, il est donc inchangé par redimensionnement : $\frac{\lambda_k(a \Omega)}{\lambda_m(a \Omega)} = \frac{\lambda_k(\Omega)}{\lambda_m(\Omega)}$. Nous avons calculé différents rapports pour l'image \texttt{camel-1.pgm}, les résultats figurent table \ref{scale}. Les variations d'une image à l'autre peuvent s'expliquer par les dégrations des contours suite au redimensionnement. Les rapports restent tout de même très proches. En pratique, nous utilisons une longueur de 50 pixels afin d'obtenir des temps de calcul raisonnables (environ 20s pour calculer les valeurs propres associées à une image de taille 50x50).
+\underline{Redimensionnement} Etant donné un domaine $\Omega$ et un facteur $a > 0$, on a $\lambda_k(a \Omega) = \frac{\lambda_k(\Omega)}{a^2}$ (voir \cite{KhabouHR07}). Or, notre descripteur utilise des rapports de valeurs propres, il est donc inchangé par redimensionnement : $\frac{\lambda_k(a \Omega)}{\lambda_m(a \Omega)} = \frac{\lambda_k(\Omega)}{\lambda_m(\Omega)}$. Nous avons calculé différents rapports pour l'image \texttt{camel-1.pgm}, les résultats figurent table \ref{scale}. Les variations d'une image à l'autre peuvent s'expliquer par les dégrations des contours suite au redimensionnement. Les rapports restent tout de même très proches. En pratique, nous utilisons une longueur de 50 pixels afin d'obtenir des temps de calcul raisonnables (environ 30s pour calculer les valeurs propres associées à une image de taille 50x50).
 
 \begin{table}[H]
   \begin{center}
@@ -279,7 +276,7 @@ Nous avons testé notre algorithme avec 4 métriques différentes pour mesurer l
 
 Nous avons utilisé des descripteurs de type 1 ($\lambda_1/\lambda_2, \lambda_1/\lambda_3, \lambda_1/\lambda_4, \dots$), de type 2 ($\lambda_1/\lambda_2, \lambda_2/\lambda_3,$ $\lambda_3/\lambda_4, \dots$), et un mélange des 2 types.
 
-Etant donné un descripteur (de taille fixée) et une distance, nous avons séparé les 1050 images en deux catégories : un train set (composé d'environ 80\% des images) et un test set (constitué des images restantes). Pour chaque image du test set nous avons recherché l'image du train set qui minimise la distance utilisée. L'algorithme de classification réussit si les deux images appartiennent à la même catégorie.
+Etant donné un descripteur (de taille fixée) et une distance, nous avons séparé les 1050 images en deux catégories : un \textit{train set} (composé d'environ 80\% des images) et un \textit{test set} (constitué des images restantes). Pour chaque image du \textit{test set} nous avons recherché l'image du \textit{train set} qui minimise la distance utilisée. L'algorithme de classification réussit si les deux images appartiennent à la même catégorie.
 
 Nous avons répété 20 fois l'expérience précédente (parallélisée sur 4 coeurs) afin d'obtenir des écarts types inférieurs à 0.03. Les pourcentages de réussites sont regroupés figure \ref{d1} pour le descripteur 1 et figure \ref{d2} pour le descripteur 2. La figure \ref{d3} illustre les performances lorsque le descripteur est composé en partie du type 1 et du type 2 (par exemple l'abscisse 30/10 correspond à un descripteur de taille 40 dont les 30 premières composantes sont de type 1 et les 10 dernières de type 2). Nous avons utilisé uniquement la métrique cosine pour ce dernier test.
 
@@ -309,7 +306,9 @@ Nous avons répété 20 fois l'expérience précédente (parallélisée sur 4 co
 
 Le descripteur de type 1 ($\lambda_1/\lambda_2, \lambda_1/\lambda_3, \lambda_1/\lambda_4, \dots$) se révèle être le plus efficace. En effet, comme on peut le constater figure \ref{d1}, quelle que soit la métrique utilisée il permet de dépasser les 60\% de réussite, alors que le descripteur de type 2 (figure \ref{d2}) ne franchit pas 56\%. Mélanger les deux descripteurs ne permet pas non plus d'augmenter les performances comme l'illustre la figure \ref{d3}.
 
-Le meilleur score est obtenu avec la métrique cosine pour un descripteur de type 1 de taille 30 (environ 70\% de réussite). Nous utilisons ces caractéristiques dans notre algorithme final.
+Le meilleur score est obtenu avec la métrique cosine pour un descripteur de type 1 de taille 30 (environ 70\% de réussite). Nous avons donc utilisé ces caractéristiques dans notre outil final. La similarité entre deux images $M_1, M_2$ (\texttt{similarity.sh}) est définie comme étant $1 - \frac{cosine(M_1,M_2)}{2}$ (le facteur 2 permet de normaliser à 1 : deux images proches ont une similarité proche de 1).
+
+Afin de classifier une image $M$ parmis les 70 classes (\texttt{classify.sh}) nous calculons pour chacune des classes l'inverse de la distance minimale de $M$ à une image de la classe. Les 70 valeurs obtenues sont ensuite normalisées pour obtenir un vecteur unitaire $V$ de taille 70 tel que $V[i]$ est proche de $1$ lorsque l'image d'entrée est similaire à l'objet de la classe i.
 
 Par ailleurs, la faible sensibilité aux perturbations (rotation, dilatation, bruit...) confirme notre hypothèse de départ : lorsque le domaine de l'image est faiblement changé, la propagation des ondes est peu impactée.
 
@@ -333,6 +332,7 @@ Comme on a pu le constater dans ce projet, utiliser la propagation d'une onde (v
 \caption{Deux images renvoyant des sons identiques (source : Wikipédia)}
 \label{drum}
 \end{figure}
+
 %#############################################################################################################%
 %#############################################################################################################%
 %#############################################################################################################%
@@ -341,7 +341,7 @@ Comme on a pu le constater dans ce projet, utiliser la propagation d'une onde (v
 
 Nous avons essayé de reconstruire un son à partir des valeurs propres du Laplacien de Dirichlet. Pour cela, à partir du spectre des valeurs propres $\{\lambda_1, \lambda_2, ...\}$ de l'image, on en déduit les fréquences pouvant se propager dans la cavité définie par l'image, de la forme $\{\alpha \sqrt{\lambda_1}, \alpha \sqrt{\lambda_2}, ...\}$, $\alpha$ étant une constante choisie de façon à ce que le spectre obtenu soit compris entre 100Hz et 2kHz.
 
-En pratique, $\alpha = 40$ et on ne retient que 3 valeurs propres. On associe la même puissance à chacune des 3 fréquences calculées. On peut changer ces différents paramètres pour entendre des sons différents.
+En pratique, $\alpha = 40$ et on ne retient que les trois premières valeurs propres. On associe la même puissance à chacune des 3 fréquences calculées. On peut changer ces différents paramètres pour entendre des sons différents.
 
 Afin d'entendre le son associé à l'image \texttt{beetle-11.pgm} par exemple, entrer : 
 \begin{center}
