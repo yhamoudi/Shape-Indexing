@@ -26,4 +26,4 @@ if __name__ == "__main__":
     v2 = r[1]
 
     distance = scipy.spatial.distance.cosine(v1, v2) # cosine distance
-    print(1.0-distance/2.0)
+    print(1.0-distance/2.0) # similarity
