@@ -216,7 +216,8 @@ Les valeurs propres du Laplacien de Dirichlet vérifient un certain nombre de pr
 \underline{Translation} Nous recadrons systématiquement l'image afin de conserver le plus petit rectangle contenant la figure. Ceci nous permet d'être insensible aux translations.
 
 ~\\
-\underline{Rotation} Il a été démontré mathématiquement que les valeurs propres sont inchangées lorsque le domaine subit une rotation (voir \cite{Zuliani04}). Ce résultat se vérifie facilement à partir de quatre rotations appliquées sur \texttt{deer-20.pgm}. Les valeurs propres associées à chaque figure sont regroupées dans la table \ref{rot}.
+\underline{Rotation} Il a été démontré mathématiquement que les valeurs propres sont inchangées lorsque le domaine subit une rotation (voir \cite{Zuliani04}). 
+Ce résultat se vérifie facilement à partir de quatre rotations appliquées sur \texttt{deer-20.pgm}. Les valeurs propres associées à chaque figure sont regroupées dans la table \ref{rot}.
 
 \begin{center}
   \begin{tabular}{c c c c}
@@ -240,7 +241,8 @@ Les valeurs propres du Laplacien de Dirichlet vérifient un certain nombre de pr
 \end{table}
 
 ~\\
-\underline{Bruit} Le bruit peut déformer le domaine de l'image et modifier par conséquent les valeurs propres. Cependant, les premières valeurs propres ($\lambda_1, \lambda_2, \lambda_3, \dots$) correspondent à la fondamentale et aux premières harmoniques, et donc aux composantes de la solution au Laplacien de Dirichlet de longueur d'onde élevée. Par conséquent, on peut s'attendre à ce qu'une déformation relativement faible du contour impacte peu ces valeurs (contrairement aux valeurs associées à des longueurs d'onde faibles). {\huge \textcolor{red}{Vrai ?}} Par ailleurs, le redimensionnement systématique de l'image que l'on applique permet de gommer partiellement le bruit.
+\underline{Bruit} Le bruit peut déformer le domaine de l'image et modifier par conséquent les valeurs propres. Cependant, les premières valeurs propres ($\lambda_1, \lambda_2, \lambda_3, \dots$) correspondent à la fondamentale et aux premières harmoniques, et donc aux composantes de la solution au Laplacien de Dirichlet de longueur d'onde élevée. Ces longueurs d'ondes étant très supérieures aux longueurs caractéristiques relatives à l'ajout de bruit (quelques pixels au plus), on peut s'attendre à ce qu'une déformation relativement faible du contour impacte peu ces longueurs d'ondes (contrairement aux valeurs associées à des longueurs d'onde faibles). Par ailleurs, le redimensionnement systématique de l'image que l'on applique permet de gommer partiellement le bruit.
+
 
 Afin de tester la robustesse au bruit, nous avons implémenté un modèle de bruit de Kanungo (pour un facteur de bruit $0 \leq a \leq 1$, tout point $x$ du domaine à distance $d$ du bord est colorié en noir avec probabilité $a^d$). La table \ref{bruit} démontre le faible impact du bruit sur les valeurs propres.
 
